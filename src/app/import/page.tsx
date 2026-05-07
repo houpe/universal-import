@@ -15,10 +15,10 @@ import { parseExcelWithProgress, ParseProgress } from '@/lib/excel-parser-client
 type Step = 'idle' | 'parsing' | 'mapping' | 'done';
 
 const STATS = [
-  { label: '支持字段', value: '11+', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', color: 'bg-[#227446] text-white' },
-  { label: '模板记忆', value: '∞', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', color: 'bg-[#227446] text-white' },
-  { label: '自动识别', value: '智能', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', color: 'bg-[#227446] text-white' },
-  { label: '批量处理', value: '10K+', icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'bg-[#227446] text-white' },
+  { label: '支持字段', value: '11+', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', color: 'bg-[#2563EB] text-white' },
+  { label: '模板记忆', value: '∞', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', color: 'bg-[#2563EB] text-white' },
+  { label: '自动识别', value: '智能', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', color: 'bg-[#2563EB] text-white' },
+  { label: '批量处理', value: '10K+', icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'bg-[#2563EB] text-white' },
 ];
 
 export default function ImportPage() {
@@ -165,7 +165,7 @@ export default function ImportPage() {
                 { step: '4', title: '提交下单', desc: '一键批量提交，实时查看进度' },
               ].map((item) => (
                 <div key={item.step} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#227446] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-[#2563EB] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                     {item.step}
                   </div>
                   <div>
@@ -179,13 +179,13 @@ export default function ImportPage() {
 
           {/* Saved templates indicator */}
           {savedTemplates > 0 && (
-            <div className="bg-gradient-to-r from-[#227446]/5 to-[#227446]/5 border border-[#227446]/20 rounded-lg p-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#227446]/20 flex items-center justify-center">
-                <svg className="w-4 h-4 text-[#227446]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gradient-to-r from-[#2563EB]/5 to-[#2563EB]/5 border border-[#2563EB]/20 rounded-lg p-4 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#2563EB]/20 flex items-center justify-center">
+                <svg className="w-4 h-4 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <p className="text-sm text-[#1d613b]">已记忆 <span className="font-semibold">{savedTemplates}</span> 个模板映射规则，上传相同结构文件将自动识别</p>
+              <p className="text-sm text-[#1D4ED8]">已记忆 <span className="font-semibold">{savedTemplates}</span> 个模板映射规则，上传相同结构文件将自动识别</p>
             </div>
           )}
 
@@ -197,7 +197,7 @@ export default function ImportPage() {
           {/* Supported Fields */}
           <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-6 shadow-sm">
             <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
-              <svg className="w-4 h-4 text-[#227446]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 text-[#2563EB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               支持的字段映射
@@ -219,7 +219,7 @@ export default function ImportPage() {
       {step === 'parsing' && (
         <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-8 shadow-sm ">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-lg bg-[#227446] flex items-center justify-center shadow-sm ">
+            <div className="w-12 h-12 rounded-lg bg-[#2563EB] flex items-center justify-center shadow-sm ">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>

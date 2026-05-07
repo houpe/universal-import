@@ -99,7 +99,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
       <div className="flex-1 overflow-auto border border-gray-200 rounded-lg shadow-sm" style={{ maxHeight: '65vh' }}>
         <table className="w-full border-collapse text-sm" style={{ minWidth: EDITABLE_FIELDS.reduce((a, f) => a + f.width, 0) }}>
           <thead className="sticky top-0 z-10">
-            <tr className="bg-gradient-to-r from-slate-800 to-gray-800 text-white">
+            <tr className="bg-gradient-to-r from-[#1E40AF] to-[#1E3A8A] text-white">
               <th className="px-2 py-3 text-center w-12 font-semibold text-xs">#</th>
               {EDITABLE_FIELDS.map((f) => (
                 <th
@@ -120,7 +120,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
             {data.map((row, rowIdx) => (
               <tr
                 key={rowIdx}
-                className={`border-b border-gray-50 transition-colors ${errorRowSet.has(rowIdx + 1) ? 'bg-red-50/30' : ''} hover:bg-[#227446]/10/50`}
+                className={`border-b border-gray-50 transition-colors ${errorRowSet.has(rowIdx + 1) ? 'bg-red-50/30' : ''} hover:bg-[#2563EB]/10`}
               >
                 <td className="px-2 py-1 text-center text-xs text-gray-400">{rowIdx + 1}</td>
                 {EDITABLE_FIELDS.map((f, fIdx) => {
@@ -140,7 +140,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                           <select
                             ref={inputRef as any}
                             value={row[f.key]}
-                            className="w-full px-1 py-1 text-sm border border-[#227446]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#227446] bg-white/90 backdrop-blur-sm"
+                            className="w-full px-1 py-1 text-sm border border-[#2563EB]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#2563EB] bg-white/90 backdrop-blur-sm"
                             onChange={(e) => commitEdit(rowIdx, f.key, e.target.value)}
                             onBlur={(e) => {
                               setEditing(null);
@@ -159,14 +159,14 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                             ref={inputRef}
                             type="text"
                             defaultValue={row[f.key]}
-                            className="w-full px-1 py-1 text-sm border border-[#227446]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#227446]"
+                            className="w-full px-1 py-1 text-sm border border-[#2563EB]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#2563EB]"
                             onBlur={(e) => commitEdit(rowIdx, f.key, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(e, rowIdx, fIdx)}
                           />
                         )
                       ) : (
                         <div
-                          className="px-1 py-1 cursor-pointer rounded hover:bg-[#227446]/20 min-h-[24px] truncate"
+                          className="px-1 py-1 cursor-pointer rounded hover:bg-[#2563EB]/20 min-h-[24px] truncate"
                           title={hasError ? cellErrors!.map((e) => e.message).join('\n') : row[f.key]}
                           onClick={() => startEdit(rowIdx, f.key)}
                         >
@@ -201,7 +201,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
       <div className="mt-3 flex items-center gap-3">
         <button
           onClick={addRow}
-          className="px-4 py-2 text-xs font-medium text-white bg-[#227446] hover:bg-[#1d613b] rounded-lg hover:shadow-sm transition-all duration-200"
+          className="px-4 py-2 text-xs font-medium text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-lg hover:shadow-sm transition-all duration-200"
         >
           + 新增空行
         </button>

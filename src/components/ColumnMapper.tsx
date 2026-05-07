@@ -86,7 +86,7 @@ export default function ColumnMapper({ headers, autoMapping, onConfirm, onCancel
                 <select
                   value={mapping[idx] || ''}
                   onChange={(e) => handleChange(idx, e.target.value)}
-                  className={`flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#227446] transition ${
+                  className={`flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] transition ${
                     isMapped ? 'border-emerald-200 bg-emerald-50/50' : 'border-gray-200'
                   }`}
                 >
@@ -112,7 +112,7 @@ export default function ColumnMapper({ headers, autoMapping, onConfirm, onCancel
           <button
             onClick={() => onConfirm(mapping)}
             disabled={!requiredMapped}
-            className="px-6 py-2 text-sm font-medium text-white bg-[#227446] hover:bg-[#1d613b] rounded-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="px-6 py-2 text-sm font-medium text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             确认映射
           </button>
