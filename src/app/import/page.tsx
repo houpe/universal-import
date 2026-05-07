@@ -43,13 +43,13 @@ export default function ImportPage() {
 
       if (saved) {
         const applied = applySavedMapping(result.headers, saved);
+        finalMapping = applied;
+        setUsedSavedMapping(true);
+
         const requiredMapped = FIELD_DEFS.filter((d) => d.required).every((d) =>
           Object.values(applied).some((v) => v === d.key)
         );
-        if (requiredMapped) {
-          finalMapping = applied;
-          setUsedSavedMapping(true);
-        } else {
+        if (!requiredMapped) {
           needsManualMapping = true;
         }
       } else {
@@ -62,7 +62,7 @@ export default function ImportPage() {
       }
 
       if (needsManualMapping) {
-        setParsed(result);
+        setParsed({ ...result, autoMapping: finalMapping });
         setStep('mapping');
         setProgress(100);
       } else {
