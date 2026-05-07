@@ -177,25 +177,6 @@ export default function ImportPage() {
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="flex gap-4">
-            {STATS.map((stat, i) => (
-              <div key={i} className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-4 shadow-sm card-hover">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-sm`}>
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500">{stat.label}</p>
-                    <p className="text-lg font-bold text-slate-800">{stat.value}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
           {/* Saved templates indicator */}
           {savedTemplates > 0 && (
             <div className="bg-gradient-to-r from-[#227446]/5 to-[#227446]/5 border border-[#227446]/20 rounded-lg p-4 flex items-center gap-3">
