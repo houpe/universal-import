@@ -7,7 +7,7 @@ import ErrorSummary from '@/components/ErrorSummary';
 import ProgressBar from '@/components/ProgressBar';
 import { showToast } from '@/components/Toast';
 import { OrderRecord, ValidationError, FieldMapping } from '@/lib/types';
-import { validateAll, findDuplicateExternalCodes } from '@/lib/validator';
+import { validateAll } from '@/lib/validator';
 import { saveTemplateMapping } from '@/lib/template-memory';
 
 export default function PreviewPage() {
@@ -20,7 +20,6 @@ export default function PreviewPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitProgress, setSubmitProgress] = useState(0);
   const [exporting, setExporting] = useState(false);
-  const [existingCodes, setExistingCodes] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const raw = sessionStorage.getItem('preview_data');
@@ -44,29 +43,24 @@ export default function PreviewPage() {
     setLoaded(true);
   }, []);
 
-  // 获取数据库已有外部编码，用于重复检测
-  useEffect(() => {
-    fetch('/api/orders?action=existing_codes')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.codes) {
-          setExistingCodes(new Set(data.codes));
-        }
-      })
-      .catch(() => {});
-  }, []);
-
   const errors: ValidationError[] = useMemo(() => {
-    const validationErrors = validateAll(data);
-    const duplicateErrors = findDuplicateExternalCodes(data, existingCodes);
-    return [...validationErrors, ...duplicateErrors];
-  }, [data, existingCodes]);
+    return validateAll(data);
+  }, [data]);
 
   const errorRowSet = useMemo(() => {
     const set = new Set<number>();
     errors.forEach((e) => set.add(e.row));
     return set;
   }, [errors]);
+
+  const tempZoneDistribution = useMemo(() => {
+    const dist: Record<string, number> = {};
+    data.forEach((row) => {
+      const zone = row.temp_zone || '未设置';
+      dist[zone] = (dist[zone] || 0) + 1;
+    });
+    return dist;
+  }, [data]);
 
   const handleChange = useCallback((newData: OrderRecord[]) => {
     setData(newData);
@@ -154,14 +148,16 @@ export default function PreviewPage() {
   if (!data.length) {
     return (
       <div className="max-w-4xl mx-auto animate-fadeIn">
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <p className="text-gray-500 mb-4">暂无预览数据</p>
+        <div className="bg-white rounded-2xl border border-gray-100 p-16 text-center shadow-sm">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 mb-6 text-lg">暂无预览数据</p>
           <button
             onClick={() => router.push('/import')}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+            className="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl hover:shadow-lg transition-all duration-200"
           >
             去上传文件
           </button>
@@ -172,34 +168,150 @@ export default function PreviewPage() {
 
   return (
     <div className="max-w-[1600px] mx-auto animate-fadeIn">
-      <div className="flex items-center justify-between mb-4">
+      {/* Header with Actions */}
+      <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">数据预览与编辑</h1>
           <p className="text-sm text-gray-500 mt-1">
-            共 {data.length} 条数据 · {errors.length > 0 ? `${errorRowSet.size} 行有错误` : '全部通过校验'}
+            共 <span className="font-semibold text-gray-700">{data.length}</span> 条数据
+            {errors.length > 0 && (
+              <span className="ml-2 text-red-600">· <span className="font-semibold">{errorRowSet.size}</span> 行有错误</span>
+            )}
+            {errors.length === 0 && (
+              <span className="ml-2 text-emerald-600">· 全部通过校验</span>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={() => router.push('/import')}
-            className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+            className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200"
           >
             返回上传
           </button>
           <button
             onClick={handleExport}
             disabled={exporting}
-            className="px-4 py-2 text-sm font-medium text-green-700 border border-green-300 bg-green-50 rounded-lg hover:bg-green-100 disabled:opacity-50 transition"
+            className="px-4 py-2 text-sm font-medium text-emerald-700 border border-emerald-200 bg-emerald-50 rounded-xl hover:bg-emerald-100 disabled:opacity-50 transition-all duration-200"
           >
             {exporting ? '导出中...' : '导出 Excel'}
           </button>
           <button
             onClick={handleSubmit}
             disabled={submitting || errors.length > 0}
-            className="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             {submitting ? '提交中...' : '提交下单'}
           </button>
+        </div>
+      </div>
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        {/* Total rows */}
+        <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">总行数</p>
+              <p className="text-xl font-bold text-gray-900">{data.length}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Errors */}
+        <div className={`bg-white rounded-xl border p-4 shadow-sm ${errors.length > 0 ? 'border-red-100' : 'border-gray-100'}`}>
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${errors.length > 0 ? 'bg-gradient-to-br from-red-500 to-rose-500' : 'bg-gradient-to-br from-emerald-500 to-green-500'}`}>
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {errors.length > 0 ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                )}
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">错误行</p>
+              <p className={`text-xl font-bold ${errors.length > 0 ? 'text-red-600' : 'text-emerald-600'}`}>{errorRowSet.size}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Valid rows */}
+        <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">有效行</p>
+              <p className="text-xl font-bold text-gray-900">{data.length - errorRowSet.size}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Temp zone distribution (most common) */}
+        <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500">温层分布</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {Object.entries(tempZoneDistribution)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 2)
+                  .map(([k, v]) => `${k}(${v})`)
+                  .join(' ')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Temp Zone Distribution Bar */}
+      <div className="bg-white rounded-xl border border-gray-100 p-4 mb-6 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-gray-700">温层分布详情</h3>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(tempZoneDistribution).map(([zone, count]) => {
+            const pct = Math.round((count / data.length) * 100);
+            const colorClass = zone === '常温' ? 'from-green-500 to-emerald-500'
+              : zone === '冷藏' ? 'from-blue-500 to-cyan-500'
+              : zone === '冷冻' ? 'from-indigo-500 to-purple-500'
+              : 'from-gray-400 to-gray-500';
+            
+            return (
+              <div key={zone} className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2 flex-1 min-w-[140px]">
+                <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-r ${colorClass}`} />
+                <span className="text-sm text-gray-700 flex-1">{zone}</span>
+                <span className="text-sm font-bold text-gray-900">{count}</span>
+                <span className="text-xs text-gray-400">({pct}%)</span>
+              </div>
+            );
+          })}
+        </div>
+        {/* Visual bar */}
+        <div className="flex h-2 rounded-full overflow-hidden mt-3 gap-0.5">
+          {Object.entries(tempZoneDistribution).map(([zone, count]) => {
+            const pct = (count / data.length) * 100;
+            const colorClass = zone === '常温' ? 'bg-green-500'
+              : zone === '冷藏' ? 'bg-blue-500'
+              : zone === '冷冻' ? 'bg-indigo-500'
+              : 'bg-gray-400';
+            return <div key={zone} className={`${colorClass} transition-all duration-500`} style={{ width: `${pct}%` }} />;
+          })}
         </div>
       </div>
 

@@ -61,53 +61,55 @@ export default function OrdersPage() {
 
   return (
     <div className="max-w-[1600px] mx-auto animate-fadeIn">
+      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">已导入运单</h1>
         <p className="text-sm text-gray-500 mt-1">查看所有历史已导入的运单记录</p>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6">
+      {/* Filter Card */}
+      <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6 shadow-sm">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">外部编码</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">外部编码</label>
             <input
               type="text"
               value={filters.external_code}
               onChange={(e) => setFilters((f) => ({ ...f, external_code: e.target.value }))}
               placeholder="搜索外部编码"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">收件人姓名</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">收件人姓名</label>
             <input
               type="text"
               value={filters.receiver_name}
               onChange={(e) => setFilters((f) => ({ ...f, receiver_name: e.target.value }))}
               placeholder="搜索收件人"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">开始日期</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">开始日期</label>
             <input
               type="date"
               value={filters.start_date}
               onChange={(e) => setFilters((f) => ({ ...f, start_date: e.target.value }))}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">结束日期</label>
+            <label className="block text-xs font-medium text-gray-600 mb-1.5">结束日期</label>
             <input
               type="date"
               value={filters.end_date}
               onChange={(e) => setFilters((f) => ({ ...f, end_date: e.target.value }))}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
-        <div className="flex justify-end gap-2 mt-3">
+        <div className="flex justify-end gap-2 mt-4">
           <button
             onClick={handleReset}
             className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
@@ -116,44 +118,53 @@ export default function OrdersPage() {
           </button>
           <button
             onClick={handleSearch}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+            className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg hover:shadow-md transition-all duration-200"
           >
             搜索
           </button>
         </div>
       </div>
 
+      {/* Loading State */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+        <div className="bg-white rounded-xl border border-gray-100 p-16 text-center shadow-sm">
+          <div className="w-12 h-12 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-sm text-gray-500">加载中...</p>
         </div>
       ) : !result || !result.data.length ? (
-        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <p className="text-gray-500">暂无运单记录</p>
+        <div className="bg-white rounded-xl border border-gray-100 p-16 text-center shadow-sm">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <p className="text-gray-500 mb-4">暂无运单记录</p>
+          <a href="/import" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+            去导入文件 →
+          </a>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">ID</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">外部编码</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">发件人</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">发件电话</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">收件人</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">收件电话</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">收件地址</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">重量</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">件数</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">温层</th>
-                  <th className="px-3 py-3 text-left font-medium text-gray-600 text-xs">提交时间</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">ID</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">外部编码</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">发件人</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">发件电话</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">收件人</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">收件电话</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">收件地址</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">重量</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">件数</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">温层</th>
+                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">提交时间</th>
                 </tr>
               </thead>
               <tbody>
                 {result.data.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-100 hover:bg-gray-50">
+                  <tr key={order.id} className="border-b border-gray-50 hover:bg-blue-50/30 transition-colors">
                     <td className="px-3 py-2.5 text-gray-400 text-xs">{order.id}</td>
                     <td className="px-3 py-2.5 text-xs font-mono">{order.external_code || '-'}</td>
                     <td className="px-3 py-2.5 text-xs">{order.sender_name}</td>
@@ -164,11 +175,12 @@ export default function OrdersPage() {
                     <td className="px-3 py-2.5 text-xs">{order.weight}</td>
                     <td className="px-3 py-2.5 text-xs">{order.quantity}</td>
                     <td className="px-3 py-2.5">
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium
+                      <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium
                         ${order.temp_zone === '常温' ? 'bg-green-100 text-green-700' :
                           order.temp_zone === '冷藏' ? 'bg-blue-100 text-blue-700' :
-                          'bg-purple-100 text-purple-700'}`}>
-                        {order.temp_zone}
+                          order.temp_zone === '冷冻' ? 'bg-indigo-100 text-indigo-700' :
+                          'bg-gray-100 text-gray-600'}`}>
+                        {order.temp_zone || '-'}
                       </span>
                     </td>
                     <td className="px-3 py-2.5 text-xs text-gray-500">
@@ -180,22 +192,23 @@ export default function OrdersPage() {
             </table>
           </div>
 
-          <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
+          {/* Pagination */}
+          <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
             <p className="text-xs text-gray-500">
-              共 {result.total} 条 · 第 {result.page} / {result.totalPages} 页
+              共 <span className="font-semibold text-gray-700">{result.total}</span> 条 · 第 <span className="font-semibold text-gray-700">{result.page}</span> / <span className="font-semibold text-gray-700">{result.totalPages}</span> 页
             </p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 上一页
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(result.totalPages, p + 1))}
                 disabled={page >= result.totalPages}
-                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 下一页
               </button>

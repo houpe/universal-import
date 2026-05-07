@@ -44,6 +44,11 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const errorMap = useMemo(() => getErrorMap(errors), [errors]);
+  const errorRowSet = useMemo(() => {
+    const set = new Set<number>();
+    errors.forEach((e) => set.add(e.row));
+    return set;
+  }, [errors]);
 
   const startEdit = useCallback((row: number, field: FieldKey) => {
     setEditing({ row, field });
@@ -91,15 +96,15 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-auto border border-gray-200 rounded-xl" style={{ maxHeight: '65vh' }}>
+      <div className="flex-1 overflow-auto border border-gray-200 rounded-xl shadow-sm" style={{ maxHeight: '65vh' }}>
         <table className="w-full border-collapse text-sm" style={{ minWidth: EDITABLE_FIELDS.reduce((a, f) => a + f.width, 0) }}>
           <thead className="sticky top-0 z-10">
-            <tr className="bg-gray-800 text-white">
-              <th className="px-2 py-2 text-center w-12 font-medium text-xs">#</th>
+            <tr className="bg-gradient-to-r from-slate-800 to-gray-800 text-white">
+              <th className="px-2 py-3 text-center w-12 font-semibold text-xs">#</th>
               {EDITABLE_FIELDS.map((f) => (
                 <th
                   key={f.key}
-                  className="px-2 py-2 text-left font-medium text-xs whitespace-nowrap"
+                  className="px-2 py-3 text-left font-semibold text-xs whitespace-nowrap"
                   style={{ width: f.width }}
                 >
                   {f.label}
@@ -108,14 +113,14 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                   )}
                 </th>
               ))}
-              <th className="px-2 py-2 text-center w-14 font-medium text-xs">操作</th>
+              <th className="px-2 py-3 text-center w-14 font-semibold text-xs">操作</th>
             </tr>
           </thead>
           <tbody>
             {data.map((row, rowIdx) => (
               <tr
                 key={rowIdx}
-                className="border-b border-gray-100 hover:bg-blue-50/40 transition-colors"
+                className={`border-b border-gray-50 transition-colors ${errorRowSet.has(rowIdx + 1) ? 'bg-red-50/30' : ''} hover:bg-blue-50/50`}
               >
                 <td className="px-2 py-1 text-center text-xs text-gray-400">{rowIdx + 1}</td>
                 {EDITABLE_FIELDS.map((f, fIdx) => {
@@ -181,7 +186,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                 <td className="px-1 py-1 text-center">
                   <button
                     onClick={() => deleteRow(rowIdx)}
-                    className="text-red-400 hover:text-red-600 transition text-xs"
+                    className="text-red-400 hover:text-red-600 transition text-xs opacity-60 hover:opacity-100"
                     title="删除此行"
                   >
                     删除
@@ -196,7 +201,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
       <div className="mt-3 flex items-center gap-3">
         <button
           onClick={addRow}
-          className="px-3 py-1.5 text-xs font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition"
+          className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg hover:shadow-md transition-all duration-200"
         >
           + 新增空行
         </button>

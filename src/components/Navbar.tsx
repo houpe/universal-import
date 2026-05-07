@@ -14,17 +14,17 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-sm">
-      <Link href="/import" className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+    <nav className="sticky top-0 z-50 glass px-6 py-2.5 flex items-center justify-between">
+      <Link href="/import" className="flex items-center gap-2.5 group">
+        <div className="w-9 h-9 bg-gradient-to-br from-blue-500 via-indigo-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200 group-hover:scale-105">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
         </div>
-        <span className="text-lg font-bold text-gray-900">万能导入</span>
+        <span className="text-lg font-bold gradient-text">万能导入</span>
       </Link>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 bg-gray-100/60 rounded-xl p-1">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || (item.href === '/import' && pathname === '/');
           return (
@@ -32,8 +32,10 @@ export default function Navbar() {
               key={item.href}
               href={item.href}
               className={`
-                flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition
-                ${active ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}
+                flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${active 
+                  ? 'bg-white text-blue-600 shadow-sm' 
+                  : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'}
               `}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

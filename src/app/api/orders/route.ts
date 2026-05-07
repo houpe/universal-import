@@ -11,14 +11,6 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    // 特殊action: 返回所有已存在的外部编码，用于预览页重复检测
-    if (searchParams.get('action') === 'existing_codes') {
-      const sql = getSql();
-      const result = await sql.query(`SELECT DISTINCT external_code FROM orders WHERE external_code IS NOT NULL AND external_code != ''`);
-      const codes = result.rows.map((r: Record<string, unknown>) => r.external_code as string);
-      return NextResponse.json({ codes });
-    }
-
     const external_code = searchParams.get('external_code') || '';
     const receiver_name = searchParams.get('receiver_name') || '';
     const start_date = searchParams.get('start_date') || '';
@@ -97,6 +89,15 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < orders.length; i++) {
       const o = orders[i];
       try {
+        if (o.external_code?.trim()) {
+          const existing = await sql.query(
+            `SELECT id FROM orders WHERE external_code = ${o.external_code.trim()}`
+          );
+          if (existing.rows.length > 0) {
+            errors.push({ row: i + 1, message: `外部编码 ${o.external_code} 与历史记录重复` });
+            continue;
+          }
+        }
         await sql`
           INSERT INTO orders (external_code, sender_name, sender_phone, sender_address,
             receiver_name, receiver_phone, receiver_address, weight, quantity, temp_zone, remark, batch_id)
