@@ -235,15 +235,16 @@ export default function PreviewPage() {
       }
 
       if (result.failed > 0) {
-        showToast('error', `部分失败：成功 ${result.success} 条，失败 ${result.failed} 条`);
+        showToast('error', `部分成功：成功 ${result.success} 条，失败 ${result.failed} 条。失败数据已保留。`);
         if (result.errors?.length > 0) {
           console.error('[提交错误详情]', result.errors);
+          const failedRows = new Set(result.errors.map((e: any) => e.row - 1));
+          const nextData = data.filter((_, i) => failedRows.has(i));
+          setData(nextData);
+          sessionStorage.setItem('preview_data', JSON.stringify(nextData));
         }
       } else {
         showToast('success', `提交成功：共 ${result.success} 条`);
-      }
-
-      if (result.success > 0) {
         sessionStorage.removeItem('preview_data');
         sessionStorage.removeItem('preview_headers');
         sessionStorage.removeItem('preview_rows');

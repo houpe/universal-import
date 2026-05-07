@@ -155,6 +155,34 @@ export default function ImportPage() {
 
       {step === 'idle' && (
         <div className="space-y-6 stagger-children">
+          {/* How to use */}
+          <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg border border-slate-200/60 p-6 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
+              <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              使用说明
+            </h3>
+            <div className="grid md:grid-cols-4 gap-4">
+              {[
+                { step: '1', title: '上传文件', desc: '拖拽或点击选择 Excel 文件' },
+                { step: '2', title: '自动识别', desc: '系统智能匹配列映射，支持手动调整' },
+                { step: '3', title: '预览编辑', desc: '检查数据，修正异常行' },
+                { step: '4', title: '提交下单', desc: '一键批量提交，实时查看进度' },
+              ].map((item) => (
+                <div key={item.step} className="flex items-start gap-3">
+                  <div className="w-7 h-7 rounded-full bg-[#227446] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    {item.step}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">{item.title}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {STATS.map((stat, i) => (
@@ -210,33 +238,6 @@ export default function ImportPage() {
             </div>
           </div>
 
-          {/* How to use */}
-          <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg border border-slate-200/60 p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
-              <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              使用说明
-            </h3>
-            <div className="grid md:grid-cols-4 gap-4">
-              {[
-                { step: '1', title: '上传文件', desc: '拖拽或点击选择 Excel 文件' },
-                { step: '2', title: '自动识别', desc: '系统智能匹配列映射，支持手动调整' },
-                { step: '3', title: '预览编辑', desc: '检查数据，修正异常行' },
-                { step: '4', title: '提交下单', desc: '一键批量提交，实时查看进度' },
-              ].map((item) => (
-                <div key={item.step} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-[#227446] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                    {item.step}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{item.title}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       )}
 
