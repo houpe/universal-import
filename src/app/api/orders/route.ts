@@ -90,9 +90,7 @@ export async function POST(request: NextRequest) {
       const o = orders[i];
       try {
         if (o.external_code?.trim()) {
-          const existing = await sql.query(
-            `SELECT id FROM orders WHERE external_code = ${o.external_code.trim()}`
-          );
+          const existing = await sql`SELECT id FROM orders WHERE external_code = ${o.external_code.trim()}`;
           if (existing.rows.length > 0) {
             errors.push({ row: i + 1, message: `外部编码 ${o.external_code} 与历史记录重复` });
             continue;
