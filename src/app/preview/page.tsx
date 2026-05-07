@@ -168,7 +168,25 @@ export default function PreviewPage() {
         return;
       }
 
-      showToast('success', `提交完成：成功 ${result.success} 条，失败 ${result.failed} 条`);
+      if (result.failed > 0 && result.success === 0) {
+        showToast('error', `提交失败：全部 ${result.failed} 条记录被拒绝`);
+        if (result.errors?.length > 0) {
+          const errorSummary = result.errors.slice(0, 3).map((e: { row: number; message: string }) => `第${e.row}行: ${e.message}`).join('\n');
+          const more = result.errors.length > 3 ? `\n...还有 ${result.errors.length - 3} 条错误` : '';
+          console.error('[提交错误详情]', result.errors);
+          showToast('error', `${errorSummary}${more}`);
+        }
+        return;
+      }
+
+      if (result.failed > 0) {
+        showToast('error', `部分失败：成功 ${result.success} 条，失败 ${result.failed} 条`);
+        if (result.errors?.length > 0) {
+          console.error('[提交错误详情]', result.errors);
+        }
+      } else {
+        showToast('success', `提交成功：共 ${result.success} 条`);
+      }
 
       if (result.success > 0) {
         sessionStorage.removeItem('preview_data');
