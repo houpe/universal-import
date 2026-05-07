@@ -17,7 +17,7 @@ export default function ProgressBar({ percent, current, total, label }: Props) {
       {label && <p className="text-sm text-gray-600 mb-2">{label}</p>}
       <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500 rounded-full transition-all duration-500 ease-out relative"
+          className="h-full bg-gradient-to-r from-[#004B64] to-[#004B64] rounded-full transition-all duration-500 ease-out relative"
           style={{ width: `${pct}%` }}
         >
           {pct > 5 && pct < 100 && (

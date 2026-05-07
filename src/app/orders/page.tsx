@@ -77,7 +77,7 @@ export default function OrdersPage() {
               value={filters.external_code}
               onChange={(e) => setFilters((f) => ({ ...f, external_code: e.target.value }))}
               placeholder="搜索外部编码"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#004B64] focus:border-transparent"
             />
           </div>
           <div>
@@ -87,7 +87,7 @@ export default function OrdersPage() {
               value={filters.receiver_name}
               onChange={(e) => setFilters((f) => ({ ...f, receiver_name: e.target.value }))}
               placeholder="搜索收件人"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#004B64] focus:border-transparent"
             />
           </div>
           <div>
@@ -96,7 +96,7 @@ export default function OrdersPage() {
               type="date"
               value={filters.start_date}
               onChange={(e) => setFilters((f) => ({ ...f, start_date: e.target.value }))}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#004B64] focus:border-transparent"
             />
           </div>
           <div>
@@ -105,7 +105,7 @@ export default function OrdersPage() {
               type="date"
               value={filters.end_date}
               onChange={(e) => setFilters((f) => ({ ...f, end_date: e.target.value }))}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#004B64] focus:border-transparent"
             />
           </div>
         </div>
@@ -118,7 +118,7 @@ export default function OrdersPage() {
           </button>
           <button
             onClick={handleSearch}
-            className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg hover:shadow-md transition-all duration-200"
+            className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#004B64] to-[#004B64] rounded-lg hover:shadow-md transition-all duration-200"
           >
             搜索
           </button>
@@ -128,7 +128,7 @@ export default function OrdersPage() {
       {/* Loading State */}
       {loading ? (
         <div className="bg-white rounded-xl border border-gray-100 p-16 text-center shadow-sm">
-          <div className="w-12 h-12 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-12 h-12 border-3 border-[#004B64] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-sm text-gray-500">加载中...</p>
         </div>
       ) : !result || !result.data.length ? (
@@ -139,7 +139,7 @@ export default function OrdersPage() {
             </svg>
           </div>
           <p className="text-gray-500 mb-4">暂无运单记录</p>
-          <a href="/import" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
+          <a href="/import" className="text-sm text-[#004B64] hover:text-[#003d52] font-medium">
             去导入文件 →
           </a>
         </div>
@@ -164,7 +164,7 @@ export default function OrdersPage() {
               </thead>
               <tbody>
                 {result.data.map((order) => (
-                  <tr key={order.id} className="border-b border-gray-50 hover:bg-blue-50/30 transition-colors">
+                  <tr key={order.id} className="border-b border-gray-50 hover:bg-[#004B64]/10/30 transition-colors">
                     <td className="px-3 py-2.5 text-gray-400 text-xs">{order.id}</td>
                     <td className="px-3 py-2.5 text-xs font-mono">{order.external_code || '-'}</td>
                     <td className="px-3 py-2.5 text-xs">{order.sender_name}</td>
@@ -177,7 +177,7 @@ export default function OrdersPage() {
                     <td className="px-3 py-2.5">
                       <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-medium
                         ${order.temp_zone === '常温' ? 'bg-green-100 text-green-700' :
-                          order.temp_zone === '冷藏' ? 'bg-blue-100 text-blue-700' :
+                          order.temp_zone === '冷藏' ? 'bg-[#004B64]/20 text-[#003d52]' :
                           order.temp_zone === '冷冻' ? 'bg-indigo-100 text-indigo-700' :
                           'bg-gray-100 text-gray-600'}`}>
                         {order.temp_zone || '-'}
