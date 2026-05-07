@@ -5,9 +5,9 @@
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
-  --primary: #227446;
+  --primary: #07BEBF;
   --primary-foreground: #ffffff;
-  --primary-hover: #1d613b;
+  --primary-hover: #059A9B;
   --secondary: #64748b;
   --secondary-foreground: #ffffff;
   --muted: #f1f5f9;
@@ -15,7 +15,7 @@
   --accent: #FFF7ED;
   --accent-foreground: #F97316;
   --border: #e2e8f0;
-  --ring: #227446;
+  --ring: #07BEBF;
   --success: #10b981;
   --success-bg: #ecfdf5;
   --warning: #f59e0b;
