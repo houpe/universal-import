@@ -6,6 +6,9 @@ import ToastContainer from "@/components/Toast";
 export const metadata: Metadata = {
   title: "万能导入 - 多模板自动导入下单系统",
   description: "支持多种 Excel 模板自动识别与导入的批量下单系统",
+  icons: {
+    icon: "https://www.ztocc.com/favicon.ico",
+  },
 };
 
 export default function RootLayout({
