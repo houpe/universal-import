@@ -79,6 +79,11 @@ export function parseExcel(buffer: ArrayBuffer): ParsedResult {
 
   const headerRowIndex = findHeaderRowIndex(sheet);
   if (headerRowIndex < 0) {
+    // Check if sheet is completely empty
+    const hasAnyContent = allRows.some(row => row.some(cell => cell.trim() !== ''));
+    if (!hasAnyContent) {
+      throw new Error('Excel文件为空，未找到任何数据');
+    }
     throw new Error('无法自动识别表头行，请检查Excel格式或使用手动映射');
   }
 

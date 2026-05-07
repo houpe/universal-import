@@ -29,6 +29,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : '解析失败';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 }
