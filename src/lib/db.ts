@@ -24,6 +24,7 @@ export async function ensureTable() {
         created_at TIMESTAMP DEFAULT NOW()
       )
     `;
+    await sql`CREATE INDEX IF NOT EXISTS idx_orders_external_code ON orders(external_code)`;
     return true;
   } catch {
     return false;

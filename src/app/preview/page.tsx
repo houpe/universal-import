@@ -9,7 +9,7 @@ import ProgressBar from '@/components/ProgressBar';
 import { showToast } from '@/components/Toast';
 import { OrderRecord, ValidationError, FieldMapping } from '@/lib/types';
 import { mapRowToOrder } from '@/lib/field-mapper';
-import { validateAll } from '@/lib/validator';
+import { validateAll, findDuplicateExternalCodes } from '@/lib/validator';
 import { saveTemplateMapping, loadTemplateMapping } from '@/lib/template-memory';
 
 export default function PreviewPage() {
@@ -24,6 +24,7 @@ export default function PreviewPage() {
   const [submitProgress, setSubmitProgress] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [showRemap, setShowRemap] = useState(false);
+  const [historyDuplicates, setHistoryDuplicates] = useState<string[]>([]);
 
   useEffect(() => {
     const raw = sessionStorage.getItem('preview_data');
@@ -37,8 +38,10 @@ export default function PreviewPage() {
       return;
     }
 
+    let parsed: OrderRecord[] = [];
     try {
-      setData(JSON.parse(raw));
+      parsed = JSON.parse(raw);
+      setData(parsed);
       if (h) setHeaders(JSON.parse(h));
       if (rows) setRawRows(JSON.parse(rows));
       if (m) setMapping(JSON.parse(m));
@@ -47,11 +50,39 @@ export default function PreviewPage() {
       showToast('error', '数据加载失败');
     }
     setLoaded(true);
+
+    const codes = parsed
+      .map(r => r.external_code?.trim())
+      .filter(Boolean);
+    if (codes.length > 0) {
+      fetch(`/api/orders?action=check_duplicates&codes=${encodeURIComponent(codes.join(','))}`)
+        .then(res => res.json())
+        .then(result => {
+          if (result.duplicates?.length > 0) {
+            setHistoryDuplicates(result.duplicates);
+          }
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const errors: ValidationError[] = useMemo(() => {
-    return validateAll(data);
-  }, [data]);
+    const all = [...validateAll(data), ...findDuplicateExternalCodes(data)];
+    if (historyDuplicates.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        const code = data[i].external_code?.trim();
+        if (code && historyDuplicates.includes(code)) {
+          all.push({
+            row: i + 1,
+            field: 'external_code',
+            label: '外部编码',
+            message: `第 ${i + 1} 行，外部编码：${code} 与历史记录重复`,
+          });
+        }
+      }
+    }
+    return all;
+  }, [data, historyDuplicates]);
 
   const errorRowSet = useMemo(() => {
     const set = new Set<number>();

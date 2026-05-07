@@ -11,6 +11,26 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
+    const action = searchParams.get('action') || '';
+
+    if (action === 'check_duplicates') {
+      const codes = searchParams.get('codes') || '';
+      if (!codes) {
+        return NextResponse.json({ duplicates: [] });
+      }
+      const codeList = codes.split(',').filter(Boolean).map(c => c.trim());
+      if (codeList.length === 0) {
+        return NextResponse.json({ duplicates: [] });
+      }
+      const sql = getSql();
+      const result = await sql.query(
+        'SELECT DISTINCT external_code FROM orders WHERE external_code = ANY($1::text[])',
+        [codeList]
+      );
+      const duplicates = result.rows.map((r: Record<string, unknown>) => r.external_code as string);
+      return NextResponse.json({ duplicates });
+    }
+
     const external_code = searchParams.get('external_code') || '';
     const receiver_name = searchParams.get('receiver_name') || '';
     const start_date = searchParams.get('start_date') || '';
