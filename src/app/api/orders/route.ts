@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSql, ensureTable } from '@/lib/db';
 import { OrderRecord, PaginatedResult } from '@/lib/types';
-import { v4 as uuidv4 } from 'uuid';
-
 export async function GET(request: NextRequest) {
   try {
     const dbReady = await ensureTable();
@@ -82,7 +80,7 @@ export async function POST(request: NextRequest) {
     }
 
     const sql = getSql()!;
-    const batchId = uuidv4().slice(0, 8);
+    const batchId = crypto.randomUUID().slice(0, 8);
     let success = 0;
     const errors: { row: number; message: string }[] = [];
 
