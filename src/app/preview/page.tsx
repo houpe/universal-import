@@ -3,27 +3,32 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import PreviewTable from '@/components/PreviewTable';
+import ColumnMapper from '@/components/ColumnMapper';
 import ErrorSummary from '@/components/ErrorSummary';
 import ProgressBar from '@/components/ProgressBar';
 import { showToast } from '@/components/Toast';
 import { OrderRecord, ValidationError, FieldMapping } from '@/lib/types';
+import { mapRowToOrder } from '@/lib/field-mapper';
 import { validateAll } from '@/lib/validator';
-import { saveTemplateMapping } from '@/lib/template-memory';
+import { saveTemplateMapping, loadTemplateMapping } from '@/lib/template-memory';
 
 export default function PreviewPage() {
   const router = useRouter();
   const [data, setData] = useState<OrderRecord[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
+  const [rawRows, setRawRows] = useState<string[][]>([]);
   const [mapping, setMapping] = useState<FieldMapping>({});
   const [fingerprint, setFingerprint] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitProgress, setSubmitProgress] = useState(0);
   const [exporting, setExporting] = useState(false);
+  const [showRemap, setShowRemap] = useState(false);
 
   useEffect(() => {
     const raw = sessionStorage.getItem('preview_data');
     const h = sessionStorage.getItem('preview_headers');
+    const rows = sessionStorage.getItem('preview_rows');
     const m = sessionStorage.getItem('preview_mapping');
     const fp = sessionStorage.getItem('preview_fingerprint');
 
@@ -35,6 +40,7 @@ export default function PreviewPage() {
     try {
       setData(JSON.parse(raw));
       if (h) setHeaders(JSON.parse(h));
+      if (rows) setRawRows(JSON.parse(rows));
       if (m) setMapping(JSON.parse(m));
       if (fp) setFingerprint(fp);
     } catch {
@@ -66,6 +72,42 @@ export default function PreviewPage() {
     setData(newData);
     sessionStorage.setItem('preview_data', JSON.stringify(newData));
   }, []);
+
+  const handleRemapConfirm = useCallback(
+    (newMapping: FieldMapping) => {
+      if (!rawRows.length || !headers.length) return;
+
+      const mappedData = rawRows.map((row) => {
+        const r = mapRowToOrder(row, newMapping);
+        return {
+          external_code: r.external_code || '',
+          sender_name: r.sender_name || '',
+          sender_phone: r.sender_phone || '',
+          sender_address: r.sender_address || '',
+          receiver_name: r.receiver_name || '',
+          receiver_phone: r.receiver_phone || '',
+          receiver_address: r.receiver_address || '',
+          weight: r.weight || '',
+          quantity: r.quantity || '',
+          temp_zone: r.temp_zone || '',
+          remark: r.remark || '',
+        } as OrderRecord;
+      });
+
+      setData(mappedData);
+      setMapping(newMapping);
+      sessionStorage.setItem('preview_data', JSON.stringify(mappedData));
+      sessionStorage.setItem('preview_mapping', JSON.stringify(newMapping));
+
+      if (fingerprint) {
+        saveTemplateMapping(fingerprint, headers, newMapping);
+      }
+
+      setShowRemap(false);
+      showToast('success', `映射已更新，共 ${mappedData.length} 条数据`);
+    },
+    [rawRows, headers, fingerprint]
+  );
 
   const handleExport = useCallback(async () => {
     setExporting(true);
@@ -131,6 +173,7 @@ export default function PreviewPage() {
       if (result.success > 0) {
         sessionStorage.removeItem('preview_data');
         sessionStorage.removeItem('preview_headers');
+        sessionStorage.removeItem('preview_rows');
         sessionStorage.removeItem('preview_mapping');
         sessionStorage.removeItem('preview_fingerprint');
         setTimeout(() => router.push('/orders'), 1000);
@@ -188,6 +231,12 @@ export default function PreviewPage() {
             className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200"
           >
             返回上传
+          </button>
+          <button
+            onClick={() => setShowRemap(true)}
+            className="px-4 py-2 text-sm font-medium text-indigo-700 border border-indigo-200 bg-indigo-50 rounded-xl hover:bg-indigo-100 transition-all duration-200"
+          >
+            重新映射
           </button>
           <button
             onClick={handleExport}
@@ -324,6 +373,16 @@ export default function PreviewPage() {
       )}
 
       <PreviewTable data={data} errors={errors} onChange={handleChange} />
+
+      {/* Remap Modal */}
+      {showRemap && (
+        <ColumnMapper
+          headers={headers}
+          autoMapping={mapping}
+          onConfirm={handleRemapConfirm}
+          onCancel={() => setShowRemap(false)}
+        />
+      )}
     </div>
   );
 }

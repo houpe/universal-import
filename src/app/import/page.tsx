@@ -83,7 +83,7 @@ export default function ImportPage() {
       } else {
         const mappedData = result.mappedData || applyMappingToRows(result.rows, finalMapping);
         setProgress(100);
-        storeAndNavigate(mappedData, result.headers, finalMapping, result.fingerprint);
+        storeAndNavigate(mappedData, result.headers, result.rows, finalMapping, result.fingerprint);
       }
     } catch (err) {
       showToast('error', err instanceof Error ? err.message : '解析异常');
@@ -113,11 +113,13 @@ export default function ImportPage() {
   function storeAndNavigate(
     mappedData: OrderRecord[],
     headers: string[],
+    rows: string[][],
     mapping: FieldMapping,
     fingerprint: string
   ) {
     sessionStorage.setItem('preview_data', JSON.stringify(mappedData));
     sessionStorage.setItem('preview_headers', JSON.stringify(headers));
+    sessionStorage.setItem('preview_rows', JSON.stringify(rows));
     sessionStorage.setItem('preview_mapping', JSON.stringify(mapping));
     sessionStorage.setItem('preview_fingerprint', fingerprint);
 
@@ -133,7 +135,7 @@ export default function ImportPage() {
       saveTemplateMapping(parsed.fingerprint, parsed.headers, mapping);
 
       const mappedData = applyMappingToRows(parsed.rows, mapping);
-      storeAndNavigate(mappedData, parsed.headers, mapping, parsed.fingerprint);
+      storeAndNavigate(mappedData, parsed.headers, parsed.rows, mapping, parsed.fingerprint);
     },
     [parsed, router]
   );
