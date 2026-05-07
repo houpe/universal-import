@@ -221,3 +221,39 @@ html {
   background: #f1f5f9;
   color: #475569;
 }
+
+/* Mesh Gradient Background */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--background);
+}
+
+.bg-mesh::before,
+.bg-mesh::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+}
+
+.bg-mesh::before {
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  width: 600px;
+  height: 600px;
+  top: -150px;
+  right: -100px;
+  opacity: 0.15;
+}
+
+.bg-mesh::after {
+  background: radial-gradient(circle, #007799 0%, transparent 70%);
+  width: 500px;
+  height: 500px;
+  bottom: -100px;
+  left: -100px;
+  opacity: 0.12;
+}
