@@ -16,11 +16,13 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 glass px-6 py-2.5 flex items-center justify-between">
       <Link href="/import" className="flex items-center gap-2.5 group">
-        <img 
-          src="https://www.ztocc.com/img/logo.b5a384ab.png" 
-          alt="logo" 
-          className="h-8 object-contain transition-transform duration-200 group-hover:scale-105" 
-        />
+        <div className="bg-[#004B64] p-1.5 rounded-lg shadow-sm">
+          <img 
+            src="https://www.ztocc.com/img/logo.b5a384ab.png" 
+            alt="logo" 
+            className="h-6 w-auto object-contain transition-transform duration-200 group-hover:scale-105" 
+          />
+        </div>
         <span className="text-lg font-bold gradient-text">万能导入</span>
       </Link>
 
