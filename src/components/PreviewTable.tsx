@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { OrderRecord, FieldKey, ValidationError } from '@/lib/types';
-import { FIELD_DEFS } from '@/lib/field-mapper';
+import { FIELD_DEFS, TEMP_ZONE_OPTIONS } from '@/lib/field-mapper';
 import { validateRow, getErrorMap } from '@/lib/validator';
 
 interface Props {
@@ -131,14 +131,34 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                       style={{ width: f.width, minWidth: f.width }}
                     >
                       {isEditing ? (
-                        <input
-                          ref={inputRef}
-                          type="text"
-                          defaultValue={row[f.key]}
-                          className="w-full px-1 py-1 text-sm border border-blue-400 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                          onBlur={(e) => commitEdit(rowIdx, f.key, e.target.value)}
-                          onKeyDown={(e) => handleKeyDown(e, rowIdx, fIdx)}
-                        />
+                        f.key === 'temp_zone' ? (
+                          <select
+                            ref={inputRef as any}
+                            value={row[f.key]}
+                            className="w-full px-1 py-1 text-sm border border-blue-400 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 bg-white"
+                            onChange={(e) => commitEdit(rowIdx, f.key, e.target.value)}
+                            onBlur={(e) => {
+                              setEditing(null);
+                            }}
+                            onKeyDown={(e) => handleKeyDown(e as any, rowIdx, fIdx)}
+                          >
+                            <option value="">-- 请选择 --</option>
+                            {TEMP_ZONE_OPTIONS.map((opt) => (
+                              <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            ref={inputRef}
+                            type="text"
+                            defaultValue={row[f.key]}
+                            className="w-full px-1 py-1 text-sm border border-blue-400 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            onBlur={(e) => commitEdit(rowIdx, f.key, e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, rowIdx, fIdx)}
+                          />
+                        )
                       ) : (
                         <div
                           className="px-1 py-1 cursor-pointer rounded hover:bg-blue-100 min-h-[24px] truncate"

@@ -181,13 +181,10 @@ export default function ImportPage() {
         <div>
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-4">
             <p className="text-sm text-yellow-700">
-              无法完全自动识别列映射，请手动配置。调整后会自动保存，下次相同模板无需重新配置。
+              {usedSavedMapping
+                ? '已自动应用历史保存的映射规则，请检查并补充未识别的列。'
+                : '无法完全自动识别列映射，请手动配置。调整后会自动保存，下次相同模板无需重新配置。'}
             </p>
-            {usedSavedMapping && (
-              <p className="text-xs text-green-600 mt-1">
-                已自动应用历史保存的映射规则
-              </p>
-            )}
           </div>
           <ColumnMapper
             headers={parsed.headers}

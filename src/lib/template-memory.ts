@@ -77,3 +77,14 @@ export function applySavedMapping(
 
   return mapping;
 }
+
+// Debug: log saved column mappings
+export function debugSavedMapping(fingerprint: string): void {
+  const saved = loadTemplateMapping(fingerprint);
+  if (saved) {
+    console.log('[DEBUG] Saved columnMappings:', JSON.stringify(saved.columnMappings));
+    console.log('[DEBUG] Saved headers:', JSON.stringify(saved.headers));
+  } else {
+    console.log('[DEBUG] No saved mapping for fingerprint:', fingerprint);
+  }
+}

@@ -1,5 +1,14 @@
 import { FieldDef, FieldKey, FieldMapping } from './types';
 
+export const TEMP_ZONE_OPTIONS = [
+  { value: '常温', label: '常温' },
+  { value: '冷藏', label: '冷藏' },
+  { value: '冷冻', label: '冷冻' },
+  { value: '恒温', label: '恒温' },
+  { value: '冷链', label: '冷链' },
+  { value: '阴凉', label: '阴凉' },
+];
+
 export const FIELD_DEFS: FieldDef[] = [
   {
     key: 'external_code',
