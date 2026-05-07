@@ -55,7 +55,11 @@ export default function PreviewPage() {
       .map(r => r.external_code?.trim())
       .filter(Boolean);
     if (codes.length > 0) {
-      fetch(`/api/orders?action=check_duplicates&codes=${encodeURIComponent(codes.join(','))}`)
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'check_duplicates', codes }),
+      })
         .then(res => res.json())
         .then(result => {
           if (result.duplicates?.length > 0) {

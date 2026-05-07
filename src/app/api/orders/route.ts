@@ -11,26 +11,6 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    const action = searchParams.get('action') || '';
-
-    if (action === 'check_duplicates') {
-      const codes = searchParams.get('codes') || '';
-      if (!codes) {
-        return NextResponse.json({ duplicates: [] });
-      }
-      const codeList = codes.split(',').filter(Boolean).map(c => c.trim());
-      if (codeList.length === 0) {
-        return NextResponse.json({ duplicates: [] });
-      }
-      const sql = getSql();
-      const result = await sql.query(
-        'SELECT DISTINCT external_code FROM orders WHERE external_code = ANY($1::text[])',
-        [codeList]
-      );
-      const duplicates = result.rows.map((r: Record<string, unknown>) => r.external_code as string);
-      return NextResponse.json({ duplicates });
-    }
-
     const external_code = searchParams.get('external_code') || '';
     const receiver_name = searchParams.get('receiver_name') || '';
     const start_date = searchParams.get('start_date') || '';
@@ -96,12 +76,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '数据库未配置' }, { status: 503 });
     }
 
-    const { orders } = (await request.json()) as { orders: OrderRecord[] };
+    const body = await request.json();
+
+    if (body.action === 'check_duplicates') {
+      const codes: string[] = body.codes || [];
+      if (codes.length === 0) {
+        return NextResponse.json({ duplicates: [] });
+      }
+      const sql = getSql();
+      const result = await sql.query(
+        'SELECT DISTINCT external_code FROM orders WHERE external_code = ANY($1::text[])',
+        [codes]
+      );
+      const duplicates = result.rows.map((r: Record<string, unknown>) => r.external_code as string);
+      return NextResponse.json({ duplicates });
+    }
+
+    const { orders } = body as { orders: OrderRecord[] };
     if (!orders || !orders.length) {
       return NextResponse.json({ error: '没有数据可提交' }, { status: 400 });
     }
 
     const sql = getSql();
+
+    const allCodes = orders
+      .map(o => o.external_code?.trim())
+      .filter(Boolean);
+    let historyDuplicateSet = new Set<string>();
+    if (allCodes.length > 0) {
+      const dupResult = await sql.query(
+        'SELECT DISTINCT external_code FROM orders WHERE external_code = ANY($1::text[])',
+        [allCodes]
+      );
+      historyDuplicateSet = new Set(dupResult.rows.map((r: Record<string, unknown>) => r.external_code as string));
+    }
+
     const batchId = crypto.randomUUID().slice(0, 8);
     let success = 0;
     const errors: { row: number; message: string }[] = [];
@@ -109,12 +118,9 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < orders.length; i++) {
       const o = orders[i];
       try {
-        if (o.external_code?.trim()) {
-          const existing = await sql`SELECT id FROM orders WHERE external_code = ${o.external_code.trim()}`;
-          if (existing.rows.length > 0) {
-            errors.push({ row: i + 1, message: `外部编码 ${o.external_code} 与历史记录重复` });
-            continue;
-          }
+        if (o.external_code?.trim() && historyDuplicateSet.has(o.external_code.trim())) {
+          errors.push({ row: i + 1, message: `外部编码 ${o.external_code} 与历史记录重复` });
+          continue;
         }
         await sql`
           INSERT INTO orders (external_code, sender_name, sender_phone, sender_address,
