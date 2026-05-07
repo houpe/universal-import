@@ -55,20 +55,40 @@ export default function PreviewPage() {
       .map(r => r.external_code?.trim())
       .filter(Boolean);
     if (codes.length > 0) {
-      fetch('/api/orders', {
+      checkServerDuplicates(codes);
+    }
+  }, []);
+
+  const checkServerDuplicates = useCallback(async (codes: string[]) => {
+    try {
+      const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'check_duplicates', codes }),
-      })
-        .then(res => res.json())
-        .then(result => {
-          if (result.duplicates?.length > 0) {
-            setHistoryDuplicates(result.duplicates);
-          }
-        })
-        .catch(() => {});
+      });
+      const result = await res.json();
+      if (result.duplicates) {
+        setHistoryDuplicates(result.duplicates);
+      } else {
+        setHistoryDuplicates([]);
+      }
+    } catch {
+      // ignore
     }
   }, []);
+
+  // Re-check server duplicates when data changes (debounced)
+  useEffect(() => {
+    if (!loaded) return;
+    const codes = data.map(r => r.external_code?.trim()).filter(Boolean);
+    if (codes.length === 0) return;
+
+    const timer = setTimeout(() => {
+      checkServerDuplicates(codes);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [data, loaded, checkServerDuplicates]);
 
   const errors: ValidationError[] = useMemo(() => {
     const all = [...validateAll(data), ...findDuplicateExternalCodes(data)];

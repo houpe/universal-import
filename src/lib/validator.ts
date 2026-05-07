@@ -58,21 +58,33 @@ export function validateAll(data: OrderRecord[]): ValidationError[] {
 export function findDuplicateExternalCodes(data: OrderRecord[]): ValidationError[] {
   const errors: ValidationError[] = [];
   const seen = new Map<string, number>();
+  const duplicateCodes = new Set<string>();
 
+  // First pass: find which codes are duplicated
   for (let i = 0; i < data.length; i++) {
     const code = data[i].external_code?.trim();
     if (!code) continue;
 
     if (seen.has(code)) {
+      duplicateCodes.add(code);
+    } else {
+      seen.set(code, i + 1);
+    }
+  }
+
+  // Second pass: mark all rows that have a duplicated code
+  for (let i = 0; i < data.length; i++) {
+    const code = data[i].external_code?.trim();
+    if (code && duplicateCodes.has(code)) {
       const firstRow = seen.get(code)!;
       errors.push({
         row: i + 1,
         field: 'external_code',
         label: '外部编码',
-        message: `第 ${i + 1} 行，外部编码：与第 ${firstRow} 行重复 (${code})`,
+        message: firstRow === i + 1 
+          ? `第 ${i + 1} 行，外部编码：与其他行重复 (${code})` 
+          : `第 ${i + 1} 行，外部编码：与第 ${firstRow} 行重复 (${code})`,
       });
-    } else {
-      seen.set(code, i + 1);
     }
   }
 
