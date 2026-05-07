@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col relative text-slate-800">
         <div className="bg-mesh"></div>
         <Navbar />
-        <main className="flex-1 p-6 z-0">{children}</main>
+        <main className="flex-1 z-0">{children}</main>
         <ToastContainer />
       </body>
     </html>

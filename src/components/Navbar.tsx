@@ -15,7 +15,7 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 glass py-2.5">
-      <div className="px-[190px] flex items-center justify-between max-w-[1600px] mx-auto">
+      <div className="px-[190px] flex items-center justify-between">
       <Link href="/import" className="flex items-center gap-2.5 group">
         <div className="bg-[#07BEBF] p-1.5 rounded-lg shadow-sm">
           <img 

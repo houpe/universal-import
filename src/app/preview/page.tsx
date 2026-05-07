@@ -264,7 +264,7 @@ export default function PreviewPage() {
 
   if (!data.length) {
     return (
-      <div className="max-w-4xl mx-auto animate-fadeIn">
+      <div className="px-[190px] animate-fadeIn">
         <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-16 text-center shadow-sm">
           <div className="w-20 h-20 mx-auto mb-6 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
             <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,7 +284,7 @@ export default function PreviewPage() {
   }
 
   return (
-    <div className="max-w-[1600px] mx-auto animate-fadeIn">
+    <div className="px-[190px] animate-fadeIn">
       {/* Header with Actions */}
       <div className="flex items-center justify-between mb-6">
         <div>
