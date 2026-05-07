@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSql, ensureTable } from '@/lib/db';
 import { OrderRecord, PaginatedResult } from '@/lib/types';
+
 export async function GET(request: NextRequest) {
   try {
     const dbReady = await ensureTable();
     if (!dbReady) {
-      return NextResponse.json({ error: '数据库未配置，请在 Vercel 中集成 Neon 数据库' }, { status: 503 });
+      return NextResponse.json({ error: '数据库未配置，请在 Vercel 中集成数据库' }, { status: 503 });
     }
 
     const { searchParams } = new URL(request.url);
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
     const pageSize = Math.min(100, Math.max(1, parseInt(searchParams.get('pageSize') || '20')));
 
-    const sql = getSql()!;
+    const sql = getSql();
 
     let whereParts: string[] = [];
     let whereClause = '';
@@ -30,16 +31,16 @@ export async function GET(request: NextRequest) {
       whereClause = 'WHERE ' + whereParts.join(' AND ');
     }
 
-    const countResult: Record<string, unknown>[] = await sql.unsafe(`SELECT COUNT(*) as cnt FROM orders ${whereClause}`) as unknown as Record<string, unknown>[];
-    const total = Number((countResult[0] as Record<string, unknown>)?.cnt || 0);
+    const countResult = await sql.query(`SELECT COUNT(*) as cnt FROM orders ${whereClause}`);
+    const total = Number(countResult.rows[0]?.cnt || 0);
 
     const offset = (page - 1) * pageSize;
-    const rows: Record<string, unknown>[] = await sql.unsafe(
+    const rowsResult = await sql.query(
       `SELECT * FROM orders ${whereClause} ORDER BY created_at DESC LIMIT ${pageSize} OFFSET ${offset}`
-    ) as unknown as Record<string, unknown>[];
+    );
 
     const result: PaginatedResult<OrderRecord> = {
-      data: rows.map((r: Record<string, unknown>) => ({
+      data: rowsResult.rows.map((r: Record<string, unknown>) => ({
         id: r.id as number,
         external_code: (r.external_code as string) || '',
         sender_name: r.sender_name as string,
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '没有数据可提交' }, { status: 400 });
     }
 
-    const sql = getSql()!;
+    const sql = getSql();
     const batchId = crypto.randomUUID().slice(0, 8);
     let success = 0;
     const errors: { row: number; message: string }[] = [];
