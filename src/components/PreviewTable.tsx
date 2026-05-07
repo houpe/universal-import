@@ -120,7 +120,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
             {data.map((row, rowIdx) => (
               <tr
                 key={rowIdx}
-                className={`border-b border-gray-50 transition-colors ${errorRowSet.has(rowIdx + 1) ? 'bg-red-50/30' : ''} hover:bg-[#004B64]/10/50`}
+                className={`border-b border-gray-50 transition-colors ${errorRowSet.has(rowIdx + 1) ? 'bg-red-50/30' : ''} hover:bg-[#227446]/10/50`}
               >
                 <td className="px-2 py-1 text-center text-xs text-gray-400">{rowIdx + 1}</td>
                 {EDITABLE_FIELDS.map((f, fIdx) => {
@@ -140,7 +140,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                           <select
                             ref={inputRef as any}
                             value={row[f.key]}
-                            className="w-full px-1 py-1 text-sm border border-[#004B64]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#004B64] bg-white/90 backdrop-blur-sm"
+                            className="w-full px-1 py-1 text-sm border border-[#227446]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#227446] bg-white/90 backdrop-blur-sm"
                             onChange={(e) => commitEdit(rowIdx, f.key, e.target.value)}
                             onBlur={(e) => {
                               setEditing(null);
@@ -159,14 +159,14 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                             ref={inputRef}
                             type="text"
                             defaultValue={row[f.key]}
-                            className="w-full px-1 py-1 text-sm border border-[#004B64]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#004B64]"
+                            className="w-full px-1 py-1 text-sm border border-[#227446]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#227446]"
                             onBlur={(e) => commitEdit(rowIdx, f.key, e.target.value)}
                             onKeyDown={(e) => handleKeyDown(e, rowIdx, fIdx)}
                           />
                         )
                       ) : (
                         <div
-                          className="px-1 py-1 cursor-pointer rounded hover:bg-[#004B64]/20 min-h-[24px] truncate"
+                          className="px-1 py-1 cursor-pointer rounded hover:bg-[#227446]/20 min-h-[24px] truncate"
                           title={hasError ? cellErrors!.map((e) => e.message).join('\n') : row[f.key]}
                           onClick={() => startEdit(rowIdx, f.key)}
                         >
@@ -201,7 +201,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
       <div className="mt-3 flex items-center gap-3">
         <button
           onClick={addRow}
-          className="px-4 py-2 text-xs font-medium text-white bg-[#004B64] hover:bg-[#003d52] rounded-lg hover:shadow-sm transition-all duration-200"
+          className="px-4 py-2 text-xs font-medium text-white bg-[#227446] hover:bg-[#1d613b] rounded-lg hover:shadow-sm transition-all duration-200"
         >
           + 新增空行
         </button>
