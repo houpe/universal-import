@@ -60,13 +60,7 @@ export default function ImportPage() {
         const applied = applySavedMapping(result.headers, saved);
         finalMapping = applied;
         setUsedSavedMapping(true);
-
-        const requiredMapped = FIELD_DEFS.filter((d) => d.required).every((d) =>
-          Object.values(applied).some((v) => v === d.key)
-        );
-        if (!requiredMapped) {
-          needsManualMapping = true;
-        }
+        needsManualMapping = false;
       } else {
         const requiredMapped = FIELD_DEFS.filter((d) => d.required).every((d) =>
           Object.values(result.autoMapping).some((v) => v === d.key)
