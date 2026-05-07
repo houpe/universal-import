@@ -140,10 +140,10 @@ export default function ImportPage() {
   }, []);
 
   return (
-    <div className="max-w-[1600px] mx-auto animate-fadeIn">
+    <div className="max-w-5xl mx-auto animate-fadeIn">
       {/* Header */}
       <div className="mb-8 stagger-children">
-        <h1 className="text-3xl font-bold gradient-text hidden">万能导入</h1>
+        <h1 className="text-3xl font-bold gradient-text">万能导入</h1>
         <p className="text-slate-500 mt-2 text-base">多模板自动识别与导入下单系统 — 支持 .xlsx / .xls 文件</p>
       </div>
 
