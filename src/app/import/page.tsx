@@ -10,6 +10,7 @@ import { ParsedResult, OrderRecord, FieldMapping, FieldKey } from '@/lib/types';
 import { mapRowToOrder, FIELD_DEFS } from '@/lib/field-mapper';
 import { saveTemplateMapping, loadTemplateMapping, applySavedMapping } from '@/lib/template-memory';
 import { validateAll, findDuplicateExternalCodes } from '@/lib/validator';
+import { parseExcelWithProgress, ParseProgress } from '@/lib/excel-parser-client';
 
 type Step = 'idle' | 'parsing' | 'mapping' | 'done';
 
@@ -18,6 +19,7 @@ export default function ImportPage() {
   const [step, setStep] = useState<Step>('idle');
   const [fileName, setFileName] = useState('');
   const [progress, setProgress] = useState(0);
+  const [progressLabel, setProgressLabel] = useState('');
   const [parsed, setParsed] = useState<ParsedResult | null>(null);
   const [usedSavedMapping, setUsedSavedMapping] = useState(false);
 
@@ -25,29 +27,15 @@ export default function ImportPage() {
     setFileName(file.name);
     setStep('parsing');
     setProgress(0);
-
-    const progressTimer = setInterval(() => {
-      setProgress((p) => Math.min(p + Math.random() * 15, 90));
-    }, 200);
+    setProgressLabel('正在读取文件...');
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      const buffer = await file.arrayBuffer();
 
-      const res = await fetch('/api/parse', { method: 'POST', body: formData });
-      const data = await res.json();
-
-      clearInterval(progressTimer);
-
-      if (!res.ok) {
-        showToast('error', data.error || '解析失败');
-        setStep('idle');
-        return;
-      }
-
-      setProgress(95);
-
-      const result = data as ParsedResult;
+      const result = parseExcelWithProgress(buffer, (p: ParseProgress) => {
+        setProgress(p.percent);
+        setProgressLabel(`${p.phase} ${p.current}/${p.total}`);
+      });
 
       const saved = loadTemplateMapping(result.fingerprint);
       let finalMapping = result.autoMapping;
@@ -74,16 +62,15 @@ export default function ImportPage() {
       }
 
       if (needsManualMapping) {
-        setParsed({ ...result, autoMapping: finalMapping });
+        setParsed(result);
         setStep('mapping');
         setProgress(100);
       } else {
-        const mappedData = applyMappingToRows(result.rows, finalMapping);
+        const mappedData = result.mappedData || applyMappingToRows(result.rows, finalMapping);
         setProgress(100);
         storeAndNavigate(mappedData, result.headers, finalMapping, result.fingerprint);
       }
     } catch (err) {
-      clearInterval(progressTimer);
       showToast('error', err instanceof Error ? err.message : '解析异常');
       setStep('idle');
     }
@@ -182,7 +169,7 @@ export default function ImportPage() {
           <div className="flex items-center gap-3 mb-6">
             <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
             <div>
-              <p className="font-medium text-gray-900">正在解析文件...</p>
+              <p className="font-medium text-gray-900">{progressLabel || '正在解析文件...'}</p>
               <p className="text-sm text-gray-500">{fileName}</p>
             </div>
           </div>
