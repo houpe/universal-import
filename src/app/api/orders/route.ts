@@ -10,6 +10,15 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
+
+    // 特殊action: 返回所有已存在的外部编码，用于预览页重复检测
+    if (searchParams.get('action') === 'existing_codes') {
+      const sql = getSql();
+      const result = await sql.query(`SELECT DISTINCT external_code FROM orders WHERE external_code IS NOT NULL AND external_code != ''`);
+      const codes = result.rows.map((r: Record<string, unknown>) => r.external_code as string);
+      return NextResponse.json({ codes });
+    }
+
     const external_code = searchParams.get('external_code') || '';
     const receiver_name = searchParams.get('receiver_name') || '';
     const start_date = searchParams.get('start_date') || '';

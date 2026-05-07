@@ -20,6 +20,7 @@ export default function PreviewPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitProgress, setSubmitProgress] = useState(0);
   const [exporting, setExporting] = useState(false);
+  const [existingCodes, setExistingCodes] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const raw = sessionStorage.getItem('preview_data');
@@ -43,11 +44,23 @@ export default function PreviewPage() {
     setLoaded(true);
   }, []);
 
+  // 获取数据库已有外部编码，用于重复检测
+  useEffect(() => {
+    fetch('/api/orders?action=existing_codes')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.codes) {
+          setExistingCodes(new Set(data.codes));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const errors: ValidationError[] = useMemo(() => {
     const validationErrors = validateAll(data);
-    const duplicateErrors = findDuplicateExternalCodes(data);
+    const duplicateErrors = findDuplicateExternalCodes(data, existingCodes);
     return [...validationErrors, ...duplicateErrors];
-  }, [data]);
+  }, [data, existingCodes]);
 
   const errorRowSet = useMemo(() => {
     const set = new Set<number>();

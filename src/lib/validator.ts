@@ -56,7 +56,8 @@ export function validateAll(data: OrderRecord[]): ValidationError[] {
 }
 
 export function findDuplicateExternalCodes(
-  data: OrderRecord[]
+  data: OrderRecord[],
+  existingCodes: Set<string> = new Set()
 ): ValidationError[] {
   const errors: ValidationError[] = [];
   const seen = new Map<string, number>();
@@ -65,7 +66,16 @@ export function findDuplicateExternalCodes(
     const code = data[i].external_code?.trim();
     if (!code) continue;
 
-    if (seen.has(code)) {
+    // Check against existing database records
+    if (existingCodes.has(code)) {
+      errors.push({
+        row: i + 1,
+        field: 'external_code',
+        label: '外部编码',
+        message: `第 ${i + 1} 行，外部编码：与数据库中已存在的记录重复 (${code})`,
+      });
+    } else if (seen.has(code)) {
+      // Check within current batch
       const firstRow = seen.get(code)!;
       errors.push({
         row: i + 1,

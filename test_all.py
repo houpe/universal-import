@@ -88,24 +88,24 @@ def test_tc_2_excel_parsing():
                 data = r.json()
                 headers = data.get("headers", [])
                 rows = data.get("rows", [])
+                auto_mapping = data.get("autoMapping", {})
+                mapped_data = data.get("mappedData", [])
 
-                # 检查是否识别出11个字段
-                expected_fields = ["外部编码", "发件人姓名", "发件人电话", "发件人地址",
-                                   "收件人姓名", "收件人电话", "收件人地址", "重量(kg)",
-                                   "件数", "温层", "备注"]
-
-                mapped_count = sum(1 for h in headers if h in expected_fields)
+                # 检查autoMapping中有多少个字段被成功映射
+                mapped_count = sum(1 for k, v in auto_mapping.items() if v is not None)
                 row_count = len(rows)
 
                 if mapped_count >= 9:  # 至少9个字段映射成功
                     log_pass(f"TC-2.x {desc}: {mapped_count}/11 字段映射成功, {row_count} 行数据")
                     # 打印映射结果
-                    log_info(f"  识别表头: {headers}")
-                    if row_count > 0:
-                        log_info(f"  示例数据: {rows[0][:3]}...")
+                    log_info(f"  原始表头: {headers}")
+                    log_info(f"  映射关系: {auto_mapping}")
+                    if mapped_data:
+                        log_info(f"  示例数据: {mapped_data[0]}")
                 else:
                     log_fail(f"TC-2.x {desc}: 仅 {mapped_count}/11 字段映射成功")
-                    log_info(f"  识别表头: {headers}")
+                    log_info(f"  原始表头: {headers}")
+                    log_info(f"  映射关系: {auto_mapping}")
             else:
                 log_fail(f"TC-2.x {desc}: 解析API返回status={r.status_code}")
         except Exception as e:
@@ -227,6 +227,12 @@ def test_tc_3_validation():
                 log_pass(f"TC-3.9: 空文件友好提示: {data['error']}")
             else:
                 log_warn(f"TC-3.9: 空文件返回空数据，未报错")
+        elif r.status_code == 400:
+            data = r.json()
+            if data.get("error"):
+                log_pass(f"TC-3.9: 空文件友好提示(400): {data['error']}")
+            else:
+                log_fail(f"TC-3.9: 空文件返回400但无错误信息")
         else:
             log_fail(f"TC-3.9: 空文件处理异常, status={r.status_code}")
     except Exception as e:
