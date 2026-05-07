@@ -178,7 +178,7 @@ export default function ImportPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="flex gap-4">
             {STATS.map((stat, i) => (
               <div key={i} className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-4 shadow-sm card-hover">
                 <div className="flex items-center gap-3">
