@@ -15,10 +15,10 @@ import { parseExcelWithProgress, ParseProgress } from '@/lib/excel-parser-client
 type Step = 'idle' | 'parsing' | 'mapping' | 'done';
 
 const STATS = [
-  { label: '支持字段', value: '11+', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', color: 'from-[#004B64] to-[#004B64]' },
-  { label: '模板记忆', value: '∞', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', color: 'from-[#004B64] to-purple-500' },
-  { label: '自动识别', value: '智能', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', color: 'from-emerald-500 to-teal-500' },
-  { label: '批量处理', value: '10K+', icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'from-orange-500 to-amber-500' },
+  { label: '支持字段', value: '11+', icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z', color: 'bg-[#004B64] text-white' },
+  { label: '模板记忆', value: '∞', icon: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', color: 'bg-[#004B64] text-white' },
+  { label: '自动识别', value: '智能', icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', color: 'bg-[#004B64] text-white' },
+  { label: '批量处理', value: '10K+', icon: 'M13 10V3L4 14h7v7l9-11h-7z', color: 'bg-[#004B64] text-white' },
 ];
 
 export default function ImportPage() {
@@ -150,7 +150,7 @@ export default function ImportPage() {
       {/* Header */}
       <div className="mb-8 stagger-children">
         <h1 className="text-3xl font-bold gradient-text">万能导入</h1>
-        <p className="text-gray-500 mt-2 text-base">多模板自动识别与导入下单系统 — 支持 .xlsx / .xls 文件</p>
+        <p className="text-slate-500 mt-2 text-base">多模板自动识别与导入下单系统 — 支持 .xlsx / .xls 文件</p>
       </div>
 
       {step === 'idle' && (
@@ -158,7 +158,7 @@ export default function ImportPage() {
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {STATS.map((stat, i) => (
-              <div key={i} className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm card-hover">
+              <div key={i} className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-4 shadow-sm card-hover">
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-sm`}>
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,8 +166,8 @@ export default function ImportPage() {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{stat.label}</p>
-                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-xs text-slate-500">{stat.label}</p>
+                    <p className="text-lg font-bold text-slate-800">{stat.value}</p>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function ImportPage() {
 
           {/* Saved templates indicator */}
           {savedTemplates > 0 && (
-            <div className="bg-gradient-to-r from-[#004B64]/5 to-[#004B64]/5 border border-[#004B64]/20 rounded-xl p-4 flex items-center gap-3">
+            <div className="bg-gradient-to-r from-[#004B64]/5 to-[#004B64]/5 border border-[#004B64]/20 rounded-lg p-4 flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-[#004B64]/20 flex items-center justify-center">
                 <svg className="w-4 h-4 text-[#004B64]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -187,13 +187,13 @@ export default function ImportPage() {
           )}
 
           {/* Upload Zone */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-1 shadow-sm">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-1 shadow-sm">
             <FileDropzone onFile={handleFile} />
           </div>
 
           {/* Supported Fields */}
-          <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-6 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
               <svg className="w-4 h-4 text-[#004B64]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -201,9 +201,9 @@ export default function ImportPage() {
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
               {FIELD_DEFS.map((def) => (
-                <div key={def.key} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-50/60">
+                <div key={def.key} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-50/60">
                   <span className={`w-2 h-2 rounded-full ${def.required ? 'bg-red-400' : 'bg-gray-300'}`} />
-                  <span className="text-gray-600">{def.label}</span>
+                  <span className="text-slate-600">{def.label}</span>
                   {!def.required && <span className="text-gray-400 text-[10px]">(选填)</span>}
                 </div>
               ))}
@@ -211,8 +211,8 @@ export default function ImportPage() {
           </div>
 
           {/* How to use */}
-          <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-xl border border-gray-100 p-6 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
+          <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg border border-slate-200/60 p-6 shadow-sm">
+            <h3 className="text-sm font-semibold text-slate-700 mb-4 flex items-center gap-2">
               <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -226,12 +226,12 @@ export default function ImportPage() {
                 { step: '4', title: '提交下单', desc: '一键批量提交，实时查看进度' },
               ].map((item) => (
                 <div key={item.step} className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#004B64] to-[#004B64] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-[#004B64] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                     {item.step}
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-800">{item.title}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{item.desc}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -241,16 +241,16 @@ export default function ImportPage() {
       )}
 
       {step === 'parsing' && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm animate-scaleIn">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-8 shadow-sm ">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#004B64] to-[#004B64] flex items-center justify-center shadow-md animate-float">
+            <div className="w-12 h-12 rounded-lg bg-[#004B64] flex items-center justify-center shadow-sm ">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
             <div>
-              <p className="font-semibold text-gray-900">{progressLabel || '正在解析文件...'}</p>
-              <p className="text-sm text-gray-500 mt-0.5">{fileName}</p>
+              <p className="font-semibold text-slate-800">{progressLabel || '正在解析文件...'}</p>
+              <p className="text-sm text-slate-500 mt-0.5">{fileName}</p>
             </div>
           </div>
           <ProgressBar percent={progress} label="解析进度" />
@@ -259,7 +259,7 @@ export default function ImportPage() {
 
       {step === 'mapping' && parsed && (
         <div className="animate-slideUp">
-          <div className={`rounded-xl border p-4 mb-4 ${usedSavedMapping ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
+          <div className={`rounded-lg border p-4 mb-4 ${usedSavedMapping ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
             <div className="flex items-center gap-2">
               {usedSavedMapping ? (
                 <svg className="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -287,14 +287,14 @@ export default function ImportPage() {
       )}
 
       {step === 'done' && (
-        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center shadow-sm animate-scaleIn">
-          <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-12 text-center shadow-sm ">
+          <div className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-green-500 rounded-lg flex items-center justify-center mx-auto mb-6 shadow-sm">
             <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <p className="text-xl font-semibold text-gray-900 mb-2">解析完成</p>
-          <p className="text-gray-500">正在跳转到数据预览页面...</p>
+          <p className="text-xl font-semibold text-slate-800 mb-2">解析完成</p>
+          <p className="text-slate-500">正在跳转到数据预览页面...</p>
         </div>
       )}
     </div>

@@ -96,7 +96,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-auto border border-gray-200 rounded-xl shadow-sm" style={{ maxHeight: '65vh' }}>
+      <div className="flex-1 overflow-auto border border-gray-200 rounded-lg shadow-sm" style={{ maxHeight: '65vh' }}>
         <table className="w-full border-collapse text-sm" style={{ minWidth: EDITABLE_FIELDS.reduce((a, f) => a + f.width, 0) }}>
           <thead className="sticky top-0 z-10">
             <tr className="bg-gradient-to-r from-slate-800 to-gray-800 text-white">
@@ -140,7 +140,7 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
                           <select
                             ref={inputRef as any}
                             value={row[f.key]}
-                            className="w-full px-1 py-1 text-sm border border-[#004B64]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#004B64] bg-white"
+                            className="w-full px-1 py-1 text-sm border border-[#004B64]/60 rounded focus:outline-none focus:ring-1 focus:ring-[#004B64] bg-white/90 backdrop-blur-sm"
                             onChange={(e) => commitEdit(rowIdx, f.key, e.target.value)}
                             onBlur={(e) => {
                               setEditing(null);
@@ -201,11 +201,11 @@ export default function PreviewTable({ data, errors, onChange }: Props) {
       <div className="mt-3 flex items-center gap-3">
         <button
           onClick={addRow}
-          className="px-4 py-2 text-xs font-medium text-white bg-gradient-to-r from-[#004B64] to-[#004B64] rounded-lg hover:shadow-md transition-all duration-200"
+          className="px-4 py-2 text-xs font-medium text-white bg-[#004B64] hover:bg-[#003d52] rounded-lg hover:shadow-sm transition-all duration-200"
         >
           + 新增空行
         </button>
-        <span className="text-xs text-gray-500">共 {data.length} 条数据</span>
+        <span className="text-xs text-slate-500">共 {data.length} 条数据</span>
       </div>
     </div>
   );

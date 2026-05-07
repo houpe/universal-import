@@ -63,15 +63,15 @@ export default function OrdersPage() {
     <div className="max-w-[1600px] mx-auto animate-fadeIn">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">已导入运单</h1>
-        <p className="text-sm text-gray-500 mt-1">查看所有历史已导入的运单记录</p>
+        <h1 className="text-2xl font-bold text-slate-800">已导入运单</h1>
+        <p className="text-sm text-slate-500 mt-1">查看所有历史已导入的运单记录</p>
       </div>
 
       {/* Filter Card */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5 mb-6 shadow-sm">
+      <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-5 mb-6 shadow-sm">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">外部编码</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">外部编码</label>
             <input
               type="text"
               value={filters.external_code}
@@ -81,7 +81,7 @@ export default function OrdersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">收件人姓名</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">收件人姓名</label>
             <input
               type="text"
               value={filters.receiver_name}
@@ -91,7 +91,7 @@ export default function OrdersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">开始日期</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">开始日期</label>
             <input
               type="date"
               value={filters.start_date}
@@ -100,7 +100,7 @@ export default function OrdersPage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1.5">结束日期</label>
+            <label className="block text-xs font-medium text-slate-600 mb-1.5">结束日期</label>
             <input
               type="date"
               value={filters.end_date}
@@ -112,13 +112,13 @@ export default function OrdersPage() {
         <div className="flex justify-end gap-2 mt-4">
           <button
             onClick={handleReset}
-            className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+            className="px-4 py-2 text-sm text-slate-600 border border-gray-200 rounded-lg hover:bg-slate-50 transition"
           >
             重置
           </button>
           <button
             onClick={handleSearch}
-            className="px-5 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#004B64] to-[#004B64] rounded-lg hover:shadow-md transition-all duration-200"
+            className="px-5 py-2 text-sm font-medium text-white bg-[#004B64] hover:bg-[#003d52] rounded-lg hover:shadow-sm transition-all duration-200"
           >
             搜索
           </button>
@@ -127,39 +127,39 @@ export default function OrdersPage() {
 
       {/* Loading State */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-gray-100 p-16 text-center shadow-sm">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-16 text-center shadow-sm">
           <div className="w-12 h-12 border-3 border-[#004B64] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm text-gray-500">加载中...</p>
+          <p className="text-sm text-slate-500">加载中...</p>
         </div>
       ) : !result || !result.data.length ? (
-        <div className="bg-white rounded-xl border border-gray-100 p-16 text-center shadow-sm">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-16 text-center shadow-sm">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
             <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
           </div>
-          <p className="text-gray-500 mb-4">暂无运单记录</p>
+          <p className="text-slate-500 mb-4">暂无运单记录</p>
           <a href="/import" className="text-sm text-[#004B64] hover:text-[#003d52] font-medium">
             去导入文件 →
           </a>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm">
+        <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gradient-to-r from-slate-50 to-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">ID</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">外部编码</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">发件人</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">发件电话</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">收件人</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">收件电话</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">收件地址</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">重量</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">件数</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">温层</th>
-                  <th className="px-3 py-3 text-left font-semibold text-gray-600 text-xs">提交时间</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">ID</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">外部编码</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">发件人</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">发件电话</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">收件人</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">收件电话</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">收件地址</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">重量</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">件数</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">温层</th>
+                  <th className="px-3 py-3 text-left font-semibold text-slate-600 text-xs">提交时间</th>
                 </tr>
               </thead>
               <tbody>
@@ -179,11 +179,11 @@ export default function OrdersPage() {
                         ${order.temp_zone === '常温' ? 'bg-green-100 text-green-700' :
                           order.temp_zone === '冷藏' ? 'bg-[#004B64]/20 text-[#003d52]' :
                           order.temp_zone === '冷冻' ? 'bg-indigo-100 text-indigo-700' :
-                          'bg-gray-100 text-gray-600'}`}>
+                          'bg-gray-100 text-slate-600'}`}>
                         {order.temp_zone || '-'}
                       </span>
                     </td>
-                    <td className="px-3 py-2.5 text-xs text-gray-500">
+                    <td className="px-3 py-2.5 text-xs text-slate-500">
                       {order.created_at || '-'}
                     </td>
                   </tr>
@@ -193,22 +193,22 @@ export default function OrdersPage() {
           </div>
 
           {/* Pagination */}
-          <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
-            <p className="text-xs text-gray-500">
-              共 <span className="font-semibold text-gray-700">{result.total}</span> 条 · 第 <span className="font-semibold text-gray-700">{result.page}</span> / <span className="font-semibold text-gray-700">{result.totalPages}</span> 页
+          <div className="px-4 py-3 border-t border-slate-200/60 bg-slate-50/50 flex items-center justify-between">
+            <p className="text-xs text-slate-500">
+              共 <span className="font-semibold text-slate-700">{result.total}</span> 条 · 第 <span className="font-semibold text-slate-700">{result.page}</span> / <span className="font-semibold text-slate-700">{result.totalPages}</span> 页
             </p>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white/90 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 上一页
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(result.totalPages, p + 1))}
                 disabled={page >= result.totalPages}
-                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition"
+                className="px-3 py-1.5 text-xs border border-gray-200 rounded-lg hover:bg-white/90 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 下一页
               </button>

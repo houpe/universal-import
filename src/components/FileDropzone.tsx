@@ -41,7 +41,7 @@ export default function FileDropzone({ onFile, disabled }: Props) {
       onClick={() => !disabled && inputRef.current?.click()}
       className={`
         relative flex flex-col items-center justify-center w-full min-h-[220px]
-        border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-300
+        border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300
         ${dragging 
           ? 'border-[#004B64] bg-[#004B64]/10/80 scale-[1.01]' 
           : 'border-gray-200 bg-gradient-to-b from-gray-50/50 to-white hover:border-[#004B64]/40 hover:bg-[#004B64]/10/30'}
@@ -56,7 +56,7 @@ export default function FileDropzone({ onFile, disabled }: Props) {
         className="hidden"
         disabled={disabled}
       />
-      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all duration-300 ${
+      <div className={`w-16 h-16 rounded-lg flex items-center justify-center mb-4 transition-all duration-300 ${
         dragging ? 'bg-[#004B64]/20 scale-110' : 'bg-gray-100'
       }`}>
         <svg className={`w-8 h-8 transition-colors duration-300 ${
@@ -66,7 +66,7 @@ export default function FileDropzone({ onFile, disabled }: Props) {
             d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
       </div>
-      <p className="text-gray-600 text-base mb-1">
+      <p className="text-slate-600 text-base mb-1">
         拖拽 Excel 文件到此处，或<span className="text-[#004B64] font-semibold">点击选择文件</span>
       </p>
       <p className="text-gray-400 text-sm">支持 .xlsx / .xls 格式</p>

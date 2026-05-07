@@ -23,7 +23,7 @@ export default function ErrorSummary({ errors, onClear }: Props) {
   if (!errors.length) return null;
 
   return (
-    <div className="bg-red-50 border border-red-200 rounded-xl mb-4 shadow-sm overflow-hidden animate-slideUp">
+    <div className="bg-red-50 border border-red-200 rounded-lg mb-4 shadow-sm overflow-hidden animate-slideUp">
       <button
         onClick={() => setCollapsed(!collapsed)}
         className="w-full flex items-center justify-between p-4 hover:bg-red-100/50 transition-colors"
@@ -64,12 +64,12 @@ export default function ErrorSummary({ errors, onClear }: Props) {
       {!collapsed && (
         <div className="border-t border-red-200 max-h-64 overflow-y-auto">
           {Object.entries(groupedErrors).map(([row, errs]) => (
-            <div key={row} className="px-4 py-2 bg-white/60 border-b border-red-100 last:border-b-0">
+            <div key={row} className="px-4 py-2 bg-white/90 backdrop-blur-sm/60 border-b border-red-100 last:border-b-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-100 text-red-600 text-[10px] font-bold">
                   {row}
                 </span>
-                <span className="text-xs text-gray-500">第 {row} 行</span>
+                <span className="text-xs text-slate-500">第 {row} 行</span>
               </div>
               <div className="pl-7 space-y-0.5">
                 {errs.map((e, i) => (

@@ -24,7 +24,7 @@ export default function Navbar() {
         <span className="text-lg font-bold gradient-text">万能导入</span>
       </Link>
 
-      <div className="flex items-center gap-1 bg-gray-100/60 rounded-xl p-1">
+      <div className="flex items-center gap-1 bg-gray-100/60 rounded-lg p-1">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || (item.href === '/import' && pathname === '/');
           return (
@@ -34,8 +34,8 @@ export default function Navbar() {
               className={`
                 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200
                 ${active 
-                  ? 'bg-white text-[#004B64] shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-white/50'}
+                  ? 'bg-white/90 backdrop-blur-sm text-[#004B64] shadow-sm' 
+                  : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50/50'}
               `}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

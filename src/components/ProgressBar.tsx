@@ -14,10 +14,10 @@ export default function ProgressBar({ percent, current, total, label }: Props) {
 
   return (
     <div className="w-full">
-      {label && <p className="text-sm text-gray-600 mb-2">{label}</p>}
+      {label && <p className="text-sm text-slate-600 mb-2">{label}</p>}
       <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-[#004B64] to-[#004B64] rounded-full transition-all duration-500 ease-out relative"
+          className="h-full bg-[#004B64] hover:bg-[#003d52] rounded-full transition-all duration-500 ease-out relative"
           style={{ width: `${pct}%` }}
         >
           {pct > 5 && pct < 100 && (
@@ -26,9 +26,9 @@ export default function ProgressBar({ percent, current, total, label }: Props) {
         </div>
       </div>
       <div className="flex justify-between mt-1.5">
-        <span className="text-xs font-medium text-gray-600">{Math.round(pct)}%</span>
+        <span className="text-xs font-medium text-slate-600">{Math.round(pct)}%</span>
         {current !== undefined && total !== undefined && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-slate-500">
             {current} / {total} 条
           </span>
         )}

@@ -56,7 +56,7 @@ export default function ToastContainer() {
           <div
             key={t.id}
             className={`
-              flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white
+              flex items-center gap-3 px-4 py-3 rounded-lg shadow-sm text-sm font-medium text-white
               ${config.bg} animate-slideUp
             `}
           >

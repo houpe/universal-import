@@ -44,17 +44,17 @@ export default function ColumnMapper({ headers, autoMapping, onConfirm, onCancel
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden animate-scaleIn">
-        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white">
+      <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden ">
+        <div className="p-6 border-b border-slate-200/60 bg-gradient-to-r from-gray-50 to-white">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">列映射配置</h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <h3 className="text-lg font-semibold text-slate-800">列映射配置</h3>
+              <p className="text-sm text-slate-500 mt-1">
                 请为每列 Excel 数据选择对应的系统字段
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-700">{mappedCount}/{totalCount}</p>
+              <p className="text-sm font-medium text-slate-700">{mappedCount}/{totalCount}</p>
               <p className="text-xs text-gray-400">已映射</p>
             </div>
           </div>
@@ -71,17 +71,17 @@ export default function ColumnMapper({ headers, autoMapping, onConfirm, onCancel
             return (
               <div
                 key={idx}
-                className={`flex items-center gap-4 p-3 rounded-xl border transition-all duration-200 ${
+                className={`flex items-center gap-4 p-3 rounded-lg border transition-all duration-200 ${
                   isMapped
                     ? 'border-emerald-200 bg-emerald-50/30'
-                    : 'border-gray-100 bg-white hover:border-gray-200'
+                    : 'border-slate-200/60 bg-white/90 backdrop-blur-sm hover:border-gray-200'
                 }`}
               >
                 <div className="w-44 text-sm truncate">
-                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 text-xs font-medium text-gray-500 mr-2">
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 text-xs font-medium text-slate-500 mr-2">
                     {idx + 1}
                   </span>
-                  <span className="font-medium text-gray-700">{header}</span>
+                  <span className="font-medium text-slate-700">{header}</span>
                 </div>
                 <select
                   value={mapping[idx] || ''}
@@ -102,17 +102,17 @@ export default function ColumnMapper({ headers, autoMapping, onConfirm, onCancel
           })}
         </div>
 
-        <div className="p-6 border-t border-gray-100 flex justify-end gap-3 bg-gray-50/50">
+        <div className="p-6 border-t border-slate-200/60 flex justify-end gap-3 bg-slate-50/50">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 rounded-lg hover:bg-gray-100 transition"
+            className="px-4 py-2 text-sm text-slate-600 hover:text-gray-800 rounded-lg hover:bg-gray-100 transition"
           >
             取消
           </button>
           <button
             onClick={() => onConfirm(mapping)}
             disabled={!requiredMapped}
-            className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-[#004B64] to-[#004B64] rounded-lg hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="px-6 py-2 text-sm font-medium text-white bg-[#004B64] hover:bg-[#003d52] rounded-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             确认映射
           </button>
