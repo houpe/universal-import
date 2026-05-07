@@ -140,7 +140,7 @@ export default function ImportPage() {
   }, []);
 
   return (
-    <div className="max-w-[1600px] mx-auto animate-fadeIn">
+    <div className="px-[190px] animate-fadeIn">
       {/* Header */}
       <div className="mb-8 stagger-children">
         <h1 className="text-3xl font-bold gradient-text hidden">万能导入</h1>
