@@ -274,7 +274,7 @@ export default function PreviewPage() {
           <p className="text-slate-500 mb-6 text-lg">暂无预览数据</p>
           <button
             onClick={() => router.push('/import')}
-            className="px-6 py-2.5 text-sm font-medium text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-lg hover:shadow-sm transition-all duration-200"
+            className="px-6 py-2.5 text-sm font-medium text-white bg-[#227446] hover:bg-[#1d613b] rounded-lg hover:shadow-sm transition-all duration-200"
           >
             去上传文件
           </button>
@@ -322,7 +322,7 @@ export default function PreviewPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting || errors.length > 0}
-            className="px-6 py-2 text-sm font-medium text-white bg-[#2563EB] hover:bg-[#1D4ED8] rounded-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            className="px-6 py-2 text-sm font-medium text-white bg-[#227446] hover:bg-[#1d613b] rounded-lg hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             {submitting ? '提交中...' : '提交下单'}
           </button>
@@ -334,7 +334,7 @@ export default function PreviewPage() {
         {/* Total rows */}
         <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#2563EB] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[#227446] flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -368,7 +368,7 @@ export default function PreviewPage() {
         {/* Valid rows */}
         <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#2563EB] text-white flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[#227446] text-white flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -383,7 +383,7 @@ export default function PreviewPage() {
         {/* Temp zone distribution (most common) */}
         <div className="bg-white/90 backdrop-blur-sm rounded-lg border border-slate-200/60 p-4 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#2563EB] text-white flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[#227446] text-white flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -411,8 +411,8 @@ export default function PreviewPage() {
           {Object.entries(tempZoneDistribution).map(([zone, count]) => {
             const pct = Math.round((count / data.length) * 100);
             const colorClass = zone === '常温' ? 'from-green-500 to-emerald-500'
-              : zone === '冷藏' ? 'bg-[#2563EB] text-white'
-              : zone === '冷冻' ? 'bg-[#2563EB] text-white'
+              : zone === '冷藏' ? 'bg-[#227446] text-white'
+              : zone === '冷冻' ? 'bg-[#227446] text-white'
               : 'from-gray-400 to-gray-500';
             
             return (
@@ -430,8 +430,8 @@ export default function PreviewPage() {
           {Object.entries(tempZoneDistribution).map(([zone, count]) => {
             const pct = (count / data.length) * 100;
             const colorClass = zone === '常温' ? 'bg-green-500'
-              : zone === '冷藏' ? 'bg-[#2563EB]'
-              : zone === '冷冻' ? 'bg-[#2563EB]'
+              : zone === '冷藏' ? 'bg-[#227446]'
+              : zone === '冷冻' ? 'bg-[#227446]'
               : 'bg-gray-400';
             return <div key={zone} className={`${colorClass} transition-all duration-500`} style={{ width: `${pct}%` }} />;
           })}

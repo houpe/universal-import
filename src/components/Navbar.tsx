@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 glass px-6 py-2.5 flex items-center justify-between">
       <Link href="/import" className="flex items-center gap-2.5 group">
-        <div className="bg-[#2563EB] p-1.5 rounded-lg shadow-sm">
+        <div className="bg-[#227446] p-1.5 rounded-lg shadow-sm">
           <img 
             src="https://www.ztocc.com/img/logo.b5a384ab.png" 
             alt="logo" 
@@ -36,7 +36,7 @@ export default function Navbar() {
               className={`
                 flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200
                 ${active 
-                  ? 'bg-white/90 backdrop-blur-sm text-[#2563EB] shadow-sm' 
+                  ? 'bg-white/90 backdrop-blur-sm text-[#227446] shadow-sm' 
                   : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50/50'}
               `}
             >
