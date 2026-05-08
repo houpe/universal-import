@@ -4,6 +4,25 @@ export function getSql() {
   return sql;
 }
 
+export async function ensureTemplateTable() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS template_mappings (
+        id SERIAL PRIMARY KEY,
+        fingerprint VARCHAR(64) UNIQUE NOT NULL,
+        headers JSONB NOT NULL,
+        column_mappings JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      )
+    `;
+    await sql`CREATE INDEX IF NOT EXISTS idx_template_fingerprint ON template_mappings(fingerprint)`;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export async function ensureTable() {
   try {
     await sql`
@@ -25,6 +44,7 @@ export async function ensureTable() {
       )
     `;
     await sql`CREATE INDEX IF NOT EXISTS idx_orders_external_code ON orders(external_code)`;
+    await ensureTemplateTable();
     return true;
   } catch {
     return false;

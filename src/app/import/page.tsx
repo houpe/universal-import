@@ -8,7 +8,7 @@ import ProgressBar from '@/components/ProgressBar';
 import { showToast } from '@/components/Toast';
 import { ParsedResult, OrderRecord, FieldMapping, FieldKey } from '@/lib/types';
 import { mapRowToOrder, FIELD_DEFS, TEMP_ZONE_OPTIONS } from '@/lib/field-mapper';
-import { saveTemplateMapping, loadTemplateMapping, applySavedMapping } from '@/lib/template-memory';
+import { saveTemplateMapping, loadTemplateMapping, applySavedMapping, listTemplateMappings } from '@/lib/template-memory';
 import { validateAll, findDuplicateExternalCodes } from '@/lib/validator';
 import { parseExcelWithProgress, ParseProgress } from '@/lib/excel-parser-client';
 
@@ -32,10 +32,9 @@ export default function ImportPage() {
   const [savedTemplates, setSavedTemplates] = useState(0);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const all = JSON.parse(localStorage.getItem('template_mappings') || '[]');
-      setSavedTemplates(all.length);
-    }
+    listTemplateMappings().then((list) => {
+      setSavedTemplates(list.length);
+    });
   }, [step]);
 
   const handleFile = useCallback(async (file: File) => {
@@ -52,7 +51,9 @@ export default function ImportPage() {
         setProgressLabel(`${p.phase} ${p.current}/${p.total}`);
       });
 
-      const saved = loadTemplateMapping(result.fingerprint);
+      const fingerprint = result.fingerprint;
+      const saved = await loadTemplateMapping(fingerprint);
+
       let finalMapping = result.autoMapping;
       let needsManualMapping = false;
 
@@ -123,10 +124,10 @@ export default function ImportPage() {
   }
 
   const handleMappingConfirm = useCallback(
-    (mapping: FieldMapping) => {
+    async (mapping: FieldMapping) => {
       if (!parsed) return;
 
-      saveTemplateMapping(parsed.fingerprint, parsed.headers, mapping);
+      await saveTemplateMapping(parsed.fingerprint, parsed.headers, mapping);
 
       const mappedData = applyMappingToRows(parsed.rows, mapping);
       storeAndNavigate(mappedData, parsed.headers, parsed.rows, mapping, parsed.fingerprint);

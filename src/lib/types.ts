@@ -62,6 +62,7 @@ export interface SavedTemplateMapping {
   columnMappings: Record<string, FieldKey>;
   headers: string[];
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface BatchSubmitResult {

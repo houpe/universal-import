@@ -1,60 +1,68 @@
 import { FieldKey, SavedTemplateMapping } from './types';
 import { normalize } from './field-mapper';
 
-const STORAGE_KEY = 'template_mappings';
-
-function loadAll(): SavedTemplateMapping[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-function saveAll(mappings: SavedTemplateMapping[]) {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(mappings));
-}
-
-export function saveTemplateMapping(
+export async function saveTemplateMapping(
   fingerprint: string,
   headers: string[],
   mapping: Record<number, FieldKey | null>
-) {
-  const all = loadAll();
-  const columnMappings: Record<string, FieldKey> = {};
+): Promise<boolean> {
+  try {
+    const columnMappings: Record<string, FieldKey> = {};
 
-  for (const [colIdx, field] of Object.entries(mapping)) {
-    if (field && headers[parseInt(colIdx)]) {
-      const nh = normalize(headers[parseInt(colIdx)]);
-      columnMappings[nh] = field;
+    for (const [colIdx, field] of Object.entries(mapping)) {
+      if (field && headers[parseInt(colIdx)]) {
+        const nh = normalize(headers[parseInt(colIdx)]);
+        columnMappings[nh] = field;
+      }
     }
+
+    const res = await fetch('/api/templates', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fingerprint, headers, columnMappings }),
+    });
+
+    if (!res.ok) return false;
+    return true;
+  } catch {
+    return false;
   }
-
-  const idx = all.findIndex((m) => m.fingerprint === fingerprint);
-  const entry: SavedTemplateMapping = {
-    fingerprint,
-    columnMappings,
-    headers,
-    createdAt: new Date().toISOString(),
-  };
-
-  if (idx >= 0) {
-    all[idx] = entry;
-  } else {
-    all.push(entry);
-  }
-
-  saveAll(all);
 }
 
-export function loadTemplateMapping(
+export async function loadTemplateMapping(
   fingerprint: string
-): SavedTemplateMapping | null {
-  const all = loadAll();
-  return all.find((m) => m.fingerprint === fingerprint) || null;
+): Promise<SavedTemplateMapping | null> {
+  try {
+    const res = await fetch(`/api/templates?fingerprint=${encodeURIComponent(fingerprint)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return {
+      fingerprint: data.fingerprint,
+      headers: data.headers,
+      columnMappings: data.columnMappings,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function listTemplateMappings(): Promise<SavedTemplateMapping[]> {
+  try {
+    const res = await fetch('/api/templates');
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.templates || []).map((t: Record<string, unknown>) => ({
+      fingerprint: t.fingerprint as string,
+      headers: t.headers as string[],
+      columnMappings: t.columnMappings as Record<string, FieldKey>,
+      createdAt: t.createdAt as string,
+      updatedAt: t.updatedAt as string,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 export function applySavedMapping(
@@ -78,9 +86,8 @@ export function applySavedMapping(
   return mapping;
 }
 
-// Debug: log saved column mappings
-export function debugSavedMapping(fingerprint: string): void {
-  const saved = loadTemplateMapping(fingerprint);
+export async function debugSavedMapping(fingerprint: string): Promise<void> {
+  const saved = await loadTemplateMapping(fingerprint);
   if (saved) {
     console.log('[DEBUG] Saved columnMappings:', JSON.stringify(saved.columnMappings));
     console.log('[DEBUG] Saved headers:', JSON.stringify(saved.headers));
